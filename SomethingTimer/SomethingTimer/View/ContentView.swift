@@ -19,9 +19,6 @@ struct ContentView: View {
                 .searchable(text: $searchText)
                 .navigationTitle("Food Timer")
                 .toolbar {
-                    ToolbarItem(placement: .navigationBarTrailing) {
-                        EditButton()
-                    }
                     ToolbarItem {
                         Button(action: {
                             showingAddSomething = true
