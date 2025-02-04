@@ -16,7 +16,7 @@ struct AddSomethingView: View {
     @State private var selectedMinutes: Int = 0
     @State private var selectedSeconds: Int = 0
     @State private var isFavorite: Bool = false
-    @State private var showAlert: Bool = false    
+    @State private var showAlert: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -65,32 +65,25 @@ struct AddSomethingView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
-                        let totalTime = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
-                        let somthing = SomethingItem(title: title, timeRemaining: totalTime, isFavorite: isFavorite)
-                        modelContext.insert(somthing)
-                        dismiss()
-                    }
-                }
-            }
-            
                         if title.isEmpty || selectedHours == 0 && selectedMinutes == 0 && selectedSeconds == 0 {
                             showAlert = true
                         } else {
                             let totalTime = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
-                            let somthing = SomethingItem(title: title, timeRemaining: totalTime)
+                            let somthing = SomethingItem(title: title, timeRemaining: totalTime, isFavorite: isFavorite)
                             modelContext.insert(somthing)
                             dismiss()
                         }
                     }
                 }
             }
+            
             .alert("타이틀과 시간을 입력해주세요", isPresented: $showAlert) {
                 Button("OK", role: .cancel) {}
             }
         }
     }
 }
-
+        
 #Preview {
     AddSomethingView()
 }
