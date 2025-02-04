@@ -14,6 +14,7 @@ struct EditSomethingView: View {
     let something: SomethingItem
     
     @State private var title: String
+    @State private var isFavorite: Bool
     @State private var selectedHours: Int
     @State private var selectedMinutes: Int
     @State private var selectedSeconds: Int
@@ -21,6 +22,7 @@ struct EditSomethingView: View {
     init(something: SomethingItem) {
         self.something = something
         self._title = State(initialValue: something.title)
+        self._isFavorite = State(initialValue: something.isFavorite)
         self._selectedHours = State(initialValue: something.timeRemaining / 3600)
         self._selectedMinutes = State(initialValue: (something.timeRemaining % 3600) / 60)
         self._selectedSeconds = State(initialValue: something.timeRemaining % 60)
@@ -53,12 +55,20 @@ struct EditSomethingView: View {
                     }
                     .frame(width: 100)
                 }
+                Section {
+                    HStack {
+                        Text("즐겨찾기")
+                        Spacer()
+                        StarToggleView(isFavorite: $isFavorite)
+                    }
+                }
             }
             .navigationTitle("Edit Something")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         something.title = title
+                        something.isFavorite = isFavorite
                         something.timeRemaining = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
                         
                         // 오류 처리 추가
@@ -82,5 +92,5 @@ struct EditSomethingView: View {
 }
 
 #Preview {
-    EditSomethingView(something: SomethingItem(title: "Hello, World!!", timeRemaining: 3600))
+    EditSomethingView(something: SomethingItem(title: "Hello, World!!", timeRemaining: 3600, isFavorite: false))
 }

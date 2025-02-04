@@ -15,6 +15,7 @@ struct AddSomethingView: View {
     @State private var selectedHours: Int = 0
     @State private var selectedMinutes: Int = 0
     @State private var selectedSeconds: Int = 0
+    @State private var isFavorite: Bool = false
     
     
     var body: some View {
@@ -46,6 +47,14 @@ struct AddSomethingView: View {
                     }
                     .frame(width: 100)
                 }
+                
+                Section {
+                    HStack {
+                        Text("즐겨찾기")
+                        Spacer()
+                        StarToggleView(isFavorite: $isFavorite)
+                    }
+                }
             }
             .navigationTitle("New Something")
             .toolbar {
@@ -57,12 +66,13 @@ struct AddSomethingView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
                         let totalTime = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
-                        let somthing = SomethingItem(title: title, timeRemaining: totalTime)
+                        let somthing = SomethingItem(title: title, timeRemaining: totalTime, isFavorite: isFavorite)
                         modelContext.insert(somthing)
                         dismiss()
                     }
                 }
             }
+            
         }
     }
 }
