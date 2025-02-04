@@ -26,7 +26,7 @@ struct SomethingListView: View {
     
     var body: some View {
         List {
-            ForEach(something) { item in
+            ForEach(something.sorted { $0.isFavorite && !$1.isFavorite }) { item in
                 SomethingRowView(item: item)
             }
             .onDelete(perform: deleteItems)
