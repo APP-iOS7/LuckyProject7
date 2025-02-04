@@ -18,9 +18,6 @@ final class SomethingItem {
     init(title: String, timeRemaining: Int, isFavorite: Bool) {
         self.title = title
         self.timeRemaining = timeRemaining
-<<<<<<< HEAD
         self.isFavorite = isFavorite
-=======
->>>>>>> fe181824ff472ee4df1d131e651a613bc82a507a
     }
 }
