@@ -42,7 +42,7 @@ class PreviewContainer {
             ]
         
         for (title) in something {
-            let something = SomethingItem(title: title, timeRemaining: 3600)
+            let something = SomethingItem(title: title, timeRemaining: 3600, isFavorite: false)
             container.mainContext.insert(something)
         }
         
