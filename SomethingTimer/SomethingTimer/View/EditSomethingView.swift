@@ -18,6 +18,7 @@ struct EditSomethingView: View {
     @State private var selectedHours: Int
     @State private var selectedMinutes: Int
     @State private var selectedSeconds: Int
+    @State private var showAlert: Bool = false
     
     init(something: SomethingItem) {
         self.something = something
@@ -67,17 +68,22 @@ struct EditSomethingView: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Save") {
-                        something.title = title
-                        something.isFavorite = isFavorite
-                        something.timeRemaining = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
-                        
-                        // 오류 처리 추가
-                        do {
-                            try modelContext.save() // 오류가 발생할 수 있어 'try' 사용
-                            dismiss() // 저장 후 화면 닫기
-                        } catch {
-                            // 오류 처리: 오류 메시지를 사용자에게 알릴 수 있습니다.
-                            print("Error saving context: \(error.localizedDescription)")
+                        if title.isEmpty || selectedHours == 0 && selectedMinutes == 0 && selectedSeconds == 0 {
+                            showAlert = true
+                        } else {
+                            something.title = title
+                            something.isFavorite = isFavorite
+                            something.timeRemaining = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
+                            
+                            
+                            // 오류 처리 추가
+                            do {
+                                try modelContext.save() // 오류가 발생할 수 있어 'try' 사용
+                                dismiss() // 저장 후 화면 닫기
+                            } catch {
+                                // 오류 처리: 오류 메시지를 사용자에게 알릴 수 있습니다.
+                                print("Error saving context: \(error.localizedDescription)")
+                            }
                         }
                     }
                 }
@@ -87,6 +93,10 @@ struct EditSomethingView: View {
                     }
                 }
             }
+            
+        }
+        .alert("타이틀과 시간을 입력해주세요", isPresented: $showAlert) {
+            Button("OK", role: .cancel) {}
         }
     }
 }
