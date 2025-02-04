@@ -15,7 +15,7 @@ struct SomethingDetailView: View {
     
     @State private var timeRemaining: Int
     @State private var isRunning: Bool = false
-    @State private var showingEditView = false
+    @State private var showingEditView: Bool = false
     
     var item: SomethingItem
     var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
