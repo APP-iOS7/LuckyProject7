@@ -111,18 +111,16 @@ struct SomethingDetailView: View {
         .onReceive(timer) { _ in
             if isRunning && timeRemaining > 0 {
                 timeRemaining -= 1
-            } else if timeRemaining == 0 {
-                // 타이머가 0이 되면 소리만 울리도록
-                playBeepSound()
+            }
+        }
+        .onChange(of: timeRemaining, initial: true) {
+            // 타이머가 0이 되면 소리만 울리도록
+            if timeRemaining == 0 {
+                try! SoundManager.shared.playSound(fileName: "cookEndSound", type: "mp3") // player에 AVAudioPlayer를 넣습니다
+                SoundManager.shared.play() // 시작
                 isRunning = false
             }
         }
-    }
-    
-    // 비프음 소리 울리기
-    func playBeepSound() {
-        let soundID: SystemSoundID = 1005  // 기본 비프음
-        AudioServicesPlaySystemSound(soundID)
     }
 }
 

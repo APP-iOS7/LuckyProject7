@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/xcode
 # Edit at https://www.toptal.com/developers/gitignore?templates=xcode
 
+#필요없는 파일 추가
+*.xcuserstate
+
 ### Xcode ###
 ## User settings
 xcuserdata/
