@@ -17,6 +17,5 @@ final class SomethingItem {
     init(title: String, timeRemaining: Int) {
         self.title = title
         self.timeRemaining = timeRemaining
-
     }
 }
