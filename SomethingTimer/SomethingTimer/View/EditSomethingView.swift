@@ -102,5 +102,6 @@ struct EditSomethingView: View {
 }
 
 #Preview {
-    EditSomethingView(something: SomethingItem(title: "Hello, World!!", timeRemaining: 3600, isFavorite: false))
+    EditSomethingView(something: SomethingItem(title: "Hello, World!!", timeRemaining: 3600, isFavorite: false, categories: []))
 }
+

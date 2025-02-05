@@ -125,5 +125,5 @@ struct SomethingDetailView: View {
 }
 
 #Preview {
-    SomethingDetailView(item: SomethingItem(title: "Hello, World!!", timeRemaining: 3600, isFavorite: false))
+    SomethingDetailView(item: SomethingItem(title: "Hello, World!!", timeRemaining: 3600, isFavorite: false, categories: []))
 }
