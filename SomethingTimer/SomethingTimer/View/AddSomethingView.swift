@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AddSomethingView: View {
+    
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
@@ -16,38 +17,31 @@ struct AddSomethingView: View {
     @State private var selectedMinutes: Int = 0
     @State private var selectedSeconds: Int = 0
     @State private var isFavorite: Bool = false
-    @State private var showAlert: Bool = false
+    @State private var descriptions: [String] = []
     
+    @State private var showAlert: Bool = false
+    @State private var showActionSheet = false
+    @State private var isTimer: Bool = false
+
     var body: some View {
         NavigationStack {
             Form {
                 Section {
                     TextField("Title", text: $title)
                 }
-                
-                HStack {
-                    Picker("시", selection: $selectedHours) {
-                        ForEach(0..<24, id: \.self) { hour in
-                            Text("\(hour) hour")
-                        }
+                Section(header: Text("조리 단계").font(.headline)) {
+                    ForEach(descriptions.indices, id: \.self) { index in
+                        TextField("레시피를 작성하세요", text: $descriptions[index])
                     }
-                    
-                    Picker("분", selection: $selectedMinutes) {
-                        ForEach(0..<60, id: \.self) { minute in
-                            Text("\(minute) min")
-                        }
+                    Button {
+                        showActionSheet = true
+                    } label: {
+                        Image(systemName: "plus")
                     }
-                    
-                    .frame(width: 100)
-                    
-                    Picker("초", selection: $selectedSeconds) {
-                        ForEach(0..<60, id: \.self) { second in
-                            Text("\(second) sec")
-                        }
+                    if isTimer {
+                        timerView(selectedHours: $selectedHours, selectedMinutes: $selectedMinutes, selectedSeconds: $selectedSeconds)
                     }
-                    .frame(width: 100)
                 }
-                
                 Section {
                     HStack {
                         Text("즐겨찾기")
@@ -56,7 +50,21 @@ struct AddSomethingView: View {
                     }
                 }
             }
-            .navigationTitle("New Something")
+            .navigationTitle("New Recipe")
+            .actionSheet(isPresented: $showActionSheet) {
+                ActionSheet(
+                    title: Text("선택하세요"),
+                    buttons: [
+                        .default(Text("텍스트")) {
+                            descriptions.append("")
+                        },
+                        .default(Text("타이머")) {
+                            isTimer = true
+                        },
+                        .cancel()
+                    ]
+                )
+            }
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {
@@ -76,14 +84,39 @@ struct AddSomethingView: View {
                     }
                 }
             }
-            
             .alert("타이틀과 시간을 입력해주세요", isPresented: $showAlert) {
                 Button("OK", role: .cancel) {}
             }
         }
     }
-}
+    
+    func timerView(selectedHours: Binding<Int>, selectedMinutes: Binding<Int>, selectedSeconds: Binding<Int>) -> some View {
         
+        HStack {
+            Picker("시", selection: $selectedHours) {
+                ForEach(0..<24, id: \.self) { hour in
+                    Text("\(hour) hour")
+                }
+            }
+            
+            Picker("분", selection: $selectedMinutes) {
+                ForEach(0..<60, id: \.self) { minute in
+                    Text("\(minute) min")
+                }
+            }
+            
+            .frame(width: 100)
+            
+            Picker("초", selection: $selectedSeconds) {
+                ForEach(0..<60, id: \.self) { second in
+                    Text("\(second) sec")
+                }
+            }
+            .frame(width: 100)
+        }
+    }
+}
+
 #Preview {
     AddSomethingView()
 }
