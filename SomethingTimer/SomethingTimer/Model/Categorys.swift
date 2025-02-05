@@ -20,11 +20,11 @@ enum CategoryCookMethod: String, Codable {
     // 이미지 이름을 가져오는 함수
     var imageName: String {
         switch self {
-        case .boiling: return "Boiling.png"
-        case .baking: return "Baking.png"
-        case .stirFrying: return "StirFrying.png"
-        case .steaming: return "Steaming.png"
-        case .frying: return "Frying.png"
+        case .boiling: return "Boiling"
+        case .baking: return "Baking"
+        case .stirFrying: return "StirFrying"
+        case .steaming: return "Steaming"
+        case .frying: return "Frying"
         }
     }
 }
@@ -40,12 +40,12 @@ enum Categoryingredient: String, Codable {
     
     var imageName: String {
         switch self {
-        case .Meat: return "Meat.png"
-        case .Seafood: return "Seafood.png"
-        case .Vegetarian: return "Vegetarian.png"
-        case .Rice: return "Rice.png"
-        case .Eggs: return "Eggs.png"
-        case .Fruit: return "Fruit.png"
+        case .Meat: return "Meat"
+        case .Seafood: return "Seafood"
+        case .Vegetarian: return "Vegetarian"
+        case .Rice: return "Rice"
+        case .Eggs: return "Eggs"
+        case .Fruit: return "Fruit"
         }
     }
 }
@@ -61,12 +61,12 @@ enum CategoryFoodGoal: String, Codable {
     
     var imageName: String {
         switch self {
-        case .Diet: return "Diet.png"
-        case .NoMeat: return "NoMeat.png"
-        case .HighProtein: return "HighProtein.png"
-        case .QuickAndEasy: return "QuickAndEasy.png"
-        case .LowFat: return "LowFat.png"
-        case .BudgetFriendly: return "BudgetFriendly.png"
+        case .Diet: return "Diet"
+        case .NoMeat: return "NoMeat"
+        case .HighProtein: return "HighProtein"
+        case .QuickAndEasy: return "QuickAndEasy"
+        case .LowFat: return "LowFat"
+        case .BudgetFriendly: return "BudgetFriendly"
         }
     }
 }
@@ -80,10 +80,10 @@ enum CategoryUsingTool: String, Codable {
     
     var imageName: String {
         switch self {
-            case .AirFryer: return "AirFryer.png"
-            case .Oven: return "Oven.png"
-            case .Microwave: return "Microwave.png"
-            case .Stove: return "Stove.png"
+            case .AirFryer: return "AirFryer"
+            case .Oven: return "Oven"
+            case .Microwave: return "Microwave"
+            case .Stove: return "Stove"
         }
     }
 }
@@ -99,12 +99,12 @@ enum CategoryMainFood: String, Codable {
     
     var imageName: String {
         switch self {
-            case .KoreanFood: return "KoreanFood.png"
-            case .WesternFood: return "WesternFood.png"
-            case .ChineseFood: return "ChineseFood.png"
-            case .JapaneseFood: return "JapaneseFood.png"
-            case .SoutheastFood: return "SoutheastFood.png"
-            case .EtcFood: return "EtcFood.png"
+            case .KoreanFood: return "KoreanFood"
+            case .WesternFood: return "WesternFood"
+            case .ChineseFood: return "ChineseFood"
+            case .JapaneseFood: return "JapaneseFood"
+            case .SoutheastFood: return "SoutheastFood"
+            case .EtcFood: return "EtcFood"
         }
     }
 }
