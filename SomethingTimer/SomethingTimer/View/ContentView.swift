@@ -17,9 +17,13 @@ struct ContentView: View {
                 
                 GridView()
             }
-            .padding(.top, 20) // 타이틀과 GridView 사이 여백 추가
+            .padding(.top, 20)
+            .background(Color.green.opacity(0.2))
+            
         }
+
     }
+    
 }
 
 // MARK: - 애니메이션 효과 적용된 타이틀 뷰
@@ -28,16 +32,18 @@ struct AnimatedTitleView: View {
 
     var body: some View {
         Text("원하는 요리의 카테고리를 선택하세요!")
-            .font(.system(size: 20, weight: .semibold))
-            .foregroundColor(.primary)
+            .font(.system(size: 22, weight: .semibold))
             .padding(.bottom, 5)
+        
             .offset(x: offsetValue) // 좌우로 흔들리는 효과
+
             .onAppear {
                 withAnimation(Animation.easeInOut(duration: 0.6).repeatForever(autoreverses: true)) {
                     offsetValue = -5 // 왼쪽 & 오른쪽 반복 이동
                 }
             }
     }
+    
 }
 
 #Preview {
