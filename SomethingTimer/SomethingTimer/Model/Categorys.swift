@@ -93,7 +93,7 @@ enum CategoryMainFood: String, Codable {
     case KoreanFood = "한식"
     case WesternFood = "양식"
     case ChineseFood = "중식"
-    case JapaneseFood = "한국음식"
+    case JapaneseFood = "일식"
     case SoutheastFood = "동남아 음식"
     case EtcFood = "기타음식"
     
