@@ -30,7 +30,9 @@ struct SomethingListView: View {
                 SomethingRowView(item: item)
             }
             .onDelete(perform: deleteItems)
+            .listRowSeparator(.hidden)
         }
+        .listStyle(.plain)
     }
     
     private func deleteItems(offsets: IndexSet) {
