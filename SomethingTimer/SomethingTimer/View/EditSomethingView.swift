@@ -5,6 +5,10 @@
 //  Created by 김건 on 1/27/25.
 //
 
+// commit : toolBar 제거 및 save 버튼 커스텀 View 전환
+// 디자인 완성
+// disclosureGroupView를 교체 해주시면 됩니다
+
 import SwiftUI
 
 struct EditSomethingView: View {
@@ -31,73 +35,107 @@ struct EditSomethingView: View {
     
     var body: some View {
         NavigationStack {
-            Form {
-                Section {
-                    TextField("Title", text: $title)
+            VStack {
+                ScrollView {
+                    // 상단 제목 필드
+                    topTextField
+                    // 상단 카메라 부분
+                    topImageView
+                    // 중앙 listView
+                    middleRecipeView
+//                    Section {
+//                        HStack {
+//                            Text("즐겨찾기")
+//                            Spacer()
+//                            StarToggleView(isFavorite: $isFavorite)
+//                        }
+//                    }
+//                    .padding(.horizontal)
                 }
-                HStack {
-                    Picker("시", selection: $selectedHours) {
-                        ForEach(0..<24, id: \.self) { hour in
-                            Text("\(hour) hour")
-                        }
-                    }
-                    
-                    Picker("분", selection: $selectedMinutes) {
-                        ForEach(0..<60, id: \.self) { minute in
-                            Text("\(minute) min")
-                        }
-                    }
-                    .frame(width: 100)
-                    
-                    Picker("초", selection: $selectedSeconds) {
-                        ForEach(0..<60, id: \.self) { second in
-                            Text("\(second) sec")
-                        }
-                    }
-                    .frame(width: 100)
-                }
-                Section {
-                    HStack {
-                        Text("즐겨찾기")
-                        Spacer()
-                        StarToggleView(isFavorite: $isFavorite)
-                    }
-                }
+                .frame(maxHeight: .infinity)
+                .navigationTitle("레시피 수정")
+                .navigationBarTitleDisplayMode(.inline)
+                
+                saveButton
+                Spacer()
             }
-            .navigationTitle("Edit Something")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Save") {
-                        if title.isEmpty || selectedHours == 0 && selectedMinutes == 0 && selectedSeconds == 0 {
-                            showAlert = true
-                        } else {
-                            something.title = title
-                            something.isFavorite = isFavorite
-                            something.timeRemaining = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
-                            
-                            
-                            // 오류 처리 추가
-                            do {
-                                try modelContext.save() // 오류가 발생할 수 있어 'try' 사용
-                                dismiss() // 저장 후 화면 닫기
-                            } catch {
-                                // 오류 처리: 오류 메시지를 사용자에게 알릴 수 있습니다.
-                                print("Error saving context: \(error.localizedDescription)")
-                            }
-                        }
-                    }
-                }
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        dismiss()
-                    }
-                }
-            }
-            
+            .padding(.horizontal)
+            .background(.green.opacity(0.5))
         }
         .alert("타이틀과 시간을 입력해주세요", isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
         }
+    }
+    
+    /// ** 상단 Title field View **
+    private var topTextField: some View {
+        TextField("Title", text: $title)
+            .frame(minHeight: 70,maxHeight: 100)
+            .background(.white)
+            .clipShape(.rect(cornerRadius: 12))
+            .padding(.vertical)
+    }
+    /// ** 이미지 상단 View **
+    private var topImageView: some View {
+        RoundedRectangle(cornerRadius: 12)
+            .foregroundStyle(.white)
+            .frame(minHeight: 200, maxHeight: 200)
+            .padding(.vertical)
+    }
+    /// ** 중앙 레시피 View **
+    private var middleRecipeView: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Image(systemName: "square.grid.2x2")
+                    .font(.title)
+                Image(systemName: "plus.circle")
+                    .font(.title)
+            }
+            .padding([.leading, .trailing, .top])
+            // 펼쳐지거나 닫히는 container
+            disclosureGroupView
+            disclosureGroupView
+            disclosureGroupView
+            disclosureGroupView
+        }
+        .background(.white)
+        .clipShape(.rect(cornerRadius: 12))
+        .padding(.top)
+    }
+    ///. ** 중앙 disclosureGroupView 펼쳐지는 View
+    private var disclosureGroupView: some View {
+        RoundedRectangle(cornerRadius: 8)
+            .foregroundStyle(.red)
+            .frame(maxWidth: .infinity, minHeight: 50)
+            .padding()
+    }
+    ///** Save Button View **
+    private var saveButton: some View {
+        Button("저장") {
+            if title.isEmpty || selectedHours == 0 && selectedMinutes == 0 && selectedSeconds == 0 {
+                showAlert = true
+            } else {
+                something.title = title
+                something.isFavorite = isFavorite
+                something.timeRemaining = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
+                
+                
+                // 오류 처리 추가
+                do {
+                    try modelContext.save() // 오류가 발생할 수 있어 'try' 사용
+                    dismiss() // 저장 후 화면 닫기
+                } catch {
+                    // 오류 처리: 오류 메시지를 사용자에게 알릴 수 있습니다.
+                    print("Error saving context: \(error.localizedDescription)")
+                }
+            }
+        }
+        .frame(maxWidth: .infinity, minHeight: 50)
+        .font(.title3)
+        .background(.white)
+        .foregroundStyle(.green)
+        .clipShape(.rect(cornerRadius: 12))
     }
 }
 
