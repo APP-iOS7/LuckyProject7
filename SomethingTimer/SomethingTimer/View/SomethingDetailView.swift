@@ -82,7 +82,6 @@ struct SomethingDetailView: View {
                         .padding()
                 })
             }
-            
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Delete") {
@@ -106,7 +105,7 @@ struct SomethingDetailView: View {
         }
         .navigationTitle(item.title)
         .sheet(isPresented: $showingEditView) {
-            EditSomethingView(something: item)
+            EditSomethingView(something: item) // timeRemaining만 전달
         }
         .onReceive(timer) { _ in
             if isRunning && timeRemaining > 0 {
