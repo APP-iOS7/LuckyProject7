@@ -69,7 +69,7 @@ struct AddSomethingView: View {
                             showAlert = true
                         } else {
                             let totalTime = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
-                            let somthing = SomethingItem(title: title, timeRemaining: totalTime, isFavorite: isFavorite)
+                            let somthing = SomethingItem(title: title, timeRemaining: totalTime, isFavorite: isFavorite, categories: [])
                             modelContext.insert(somthing)
                             dismiss()
                         }

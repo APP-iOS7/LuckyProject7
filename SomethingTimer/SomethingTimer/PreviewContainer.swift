@@ -37,12 +37,14 @@ class PreviewContainer {
             "삶은계란",
             "러닝",
             "삼계탕",
-            "파스타면"
+            "파스타면",
+            "녹옹"
+        
             
             ]
         
         for (title) in something {
-            let something = SomethingItem(title: title, timeRemaining: 3600, isFavorite: false)
+            let something = SomethingItem(title: title, timeRemaining: 3600, isFavorite: false, categories: [])
             container.mainContext.insert(something)
         }
         

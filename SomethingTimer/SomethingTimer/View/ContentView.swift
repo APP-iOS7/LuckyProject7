@@ -9,32 +9,34 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    
     @State private var showingAddSomething = false
     @State private var searchText = ""
 
     var body: some View {
-        NavigationStack{
-            SomethingListView(searchText: searchText)
-                .searchable(text: $searchText)
-                .navigationTitle("Food Timer")
-                .toolbar {
-                    ToolbarItem {
-                        Button(action: {
-                            showingAddSomething = true
-                        }) {
-                            Label("Add Item", systemImage: "plus")
+        NavigationStack {
+            VStack {
+                GridView(searchText: searchText)
+                    .searchable(text: $searchText)
+                    .navigationTitle("Categories")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem {
+                            Button(action: {
+                                showingAddSomething = true
+                            }) {
+                                Label("Add Item", systemImage: "plus")
+                            }
                         }
                     }
-                }
-        }
-        .sheet(isPresented: $showingAddSomething) {
-            AddSomethingView()
+            }
+            .sheet(isPresented: $showingAddSomething) {
+                AddSomethingView()
+            }
         }
     }
-
-
 }
+
+
 
 #Preview {
     ContentView()
