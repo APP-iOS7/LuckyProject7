@@ -18,28 +18,23 @@ struct EditSomethingView: View {
     let something: SomethingItem
     
     @State private var title: String
+    @State private var cellInfo: [CellInfo]
     @State private var isFavorite: Bool
-    @State private var selectedHours: Int
-    @State private var selectedMinutes: Int
-    @State private var selectedSeconds: Int
-    @State private var showAlert: Bool = false
+    @State private var categories: Categorys
+
+    
     @State private var showImagePicker: Bool = false
     @State private var selectedImage: UIImage?
-
-    /// ** 카테고리 open / close 상태 변수
+    
     @State private var isShowCategory: Bool = false
-    // 기본 container를 하나 가집니다.
-    @State private var cellInfo: [CellInfo] = [
-        CellInfo(smallTitle: "", content: "", timeRemaining: nil)
-    ]
+    @State private var showAlert: Bool = false
+    
     init(something: SomethingItem) {
         self.something = something
         self._title = State(initialValue: something.title)
         self._isFavorite = State(initialValue: something.isFavorite)
-        self._selectedHours = State(initialValue: something.cellInfo[0].timeRemaining ?? 0 / 3600)
-        self._selectedMinutes = State(initialValue: (something.cellInfo[0].timeRemaining ?? 0 % 3600) / 60)
-        self._selectedSeconds = State(initialValue: something.cellInfo[0].timeRemaining ?? 0 % 60)
-
+        self._cellInfo = State(initialValue: something.cellInfo)
+        self._categories = State(initialValue: something.categories)
     }
     
     var body: some View {
@@ -52,14 +47,8 @@ struct EditSomethingView: View {
                     topImageView
                     // 중앙 listView
                     middleRecipeView
-//                    Section {
-//                        HStack {
-//                            Text("즐겨찾기")
-//                            Spacer()
-//                            StarToggleView(isFavorite: $isFavorite)
-//                        }
-//                    }
-//                    .padding(.horizontal)
+                    // 즐겨찾기 뷰
+                    starView
                 }
                 .frame(maxHeight: .infinity)
                 .navigationTitle("레시피 수정")
@@ -71,12 +60,23 @@ struct EditSomethingView: View {
             .padding(.horizontal)
             .background(.green.opacity(0.5))
             .sheet(isPresented: $isShowCategory) {
-                ShowCategoryView(something: something)
+                ShowCategoryView(categories: $categories)
             }
         }
         .alert("타이틀과 시간을 입력해주세요", isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
         }
+    }
+    
+    private var starView: some View {
+        Section {
+            HStack {
+                Text("즐겨찾기")
+                Spacer()
+                StarToggleView(isFavorite: $isFavorite)
+            }
+        }
+        .padding()
     }
     
     /// ** 상단 Title field View **
@@ -130,51 +130,47 @@ struct EditSomethingView: View {
         VStack {
             HStack {
                 Spacer()
-                Image(systemName: "square.grid.2x2")
-                    .font(.title)
-                    .onTapGesture {
-                        showCategoryBottomSheet()
-                    }
-                Image(systemName: "plus.circle")
-                    .font(.title)
+                Button { // 카테고리 버튼
+                    isShowCategory = true
+                } label: {
+                    Image(systemName: "square.grid.2x2")
+                        .font(.title)
+                }
+                Button { // 추가 버튼
+                    cellInfo.append(CellInfo(smallTitle: "", content: ""))
+                } label: {
+                    Image(systemName: "plus.circle")
+                        .font(.title)
+                }
             }
             .padding([.leading, .trailing, .top])
             // 펼쳐지거나 닫히는 container
-            RecipeCellView(cellInfo: $cellInfo[0])
+            ForEach(cellInfo.indices, id: \.self) { index in
+                RecipeCellView(cellInfo: $cellInfo[index])
+            }
         }
         .background(.white)
         .clipShape(.rect(cornerRadius: 12))
         .padding(.top)
     }
-    ///. ** 중앙 disclosureGroupView 펼쳐지는 View
-    private var disclosureGroupView: some View {
-        RoundedRectangle(cornerRadius: 8)
-            .foregroundStyle(.red)
-            .frame(maxWidth: .infinity, minHeight: 50)
-            .padding()
-    }
     ///** Save Button View **
     private var saveButton: some View {
         Button("저장") {
-
-//            if title.isEmpty || selectedHours == 0 && selectedMinutes == 0 && selectedSeconds == 0 {
-//                showAlert = true
-//            } else {
-//                something.title = title
-//                something.isFavorite = isFavorite
-//                something.timeRemaining = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
-//                
-//                
-//                // 오류 처리 추가
-//                do {
-//                    try modelContext.save() // 오류가 발생할 수 있어 'try' 사용
-//                    dismiss() // 저장 후 화면 닫기
-//                } catch {
-//                    // 오류 처리: 오류 메시지를 사용자에게 알릴 수 있습니다.
-//                    print("Error saving context: \(error.localizedDescription)")
-//                }
-//            }
-
+            if title.isEmpty {
+                showAlert = true
+            } else {
+                something.title = title
+                something.isFavorite = isFavorite
+                something.cellInfo = cellInfo
+                // 오류 처리 추가
+                do {
+                    try modelContext.save() // 오류가 발생할 수 있어 'try' 사용
+                    dismiss() // 저장 후 화면 닫기
+                } catch {
+                    // 오류 처리: 오류 메시지를 사용자에게 알릴 수 있습니다.
+                    print("Error saving context: \(error.localizedDescription)")
+                }
+            }
         }
         .frame(maxWidth: .infinity, minHeight: 50)
         .font(.title3)
@@ -182,15 +178,8 @@ struct EditSomethingView: View {
         .foregroundStyle(.green)
         .clipShape(.rect(cornerRadius: 12))
     }
-    
-    /// ** Category 목록 보여주는 부분 **
-    private func showCategoryBottomSheet() {
-        isShowCategory = true // true -> 카테고리 시트 열림
-    }
 }
 
 #Preview {
-
-    EditSomethingView(something: SomethingItem(title: "", cellInfo: [CellInfo(smallTitle: "소제목", content: "주저리주저리", timeRemaining: 3600)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer)))
+    EditSomethingView(something: SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "소제목", content: "주저리주저리", timeRemaining: 3600)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer)))
 }
-
