@@ -17,7 +17,7 @@ struct AddSomethingView: View {
     @State private var showAlert: Bool = false
     @State private var isTimer: Bool = false
     
-    @State private var category: Categorys = Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer, categoryMainFood: .KoreanFood)
+    @State private var category: Categorys = Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer)
     
     // 기본 container를 하나 가집니다.
     @State private var cellInfo: [CellInfo] = [
