@@ -9,8 +9,14 @@ import SwiftUI
 
 struct RecipeCellView: View {
     
+    @Environment(\.dismiss) private var dismiss
+    
     @State private var isExpanded = false
     @State private var hasTimer: Bool = false
+    
+    @State private var selectedHours: Int = 0
+    @State private var selectedMinutes: Int = 0
+    @State private var selectedSeconds: Int = 0
     
     // Binding으로 CellInfo 인스턴스를 받습니다.
     /* 사용자가 타이머를 설정했을 때,
@@ -32,7 +38,6 @@ struct RecipeCellView: View {
                             .padding()
                             .foregroundStyle(bgColor)
                     }
-                    //.border(.black)
                     Button {
                         hasTimer.toggle()
                     } label: {
@@ -55,7 +60,6 @@ struct RecipeCellView: View {
                         .foregroundStyle(bgColor)
                         .frame(alignment: .leading)
                         .multilineTextAlignment(.leading)
-//                        .border(.black)
                     Spacer()
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                         .foregroundColor(bgColor)
@@ -67,6 +71,30 @@ struct RecipeCellView: View {
             .padding()
         }
     }
+    
+//    func timerView() -> some View {
+//        HStack {
+//            Picker("시", selection: $selectedHours) {
+//                ForEach(0..<24, id: \.self) { hour in
+//                    Text("\(hour) hour")
+//                }
+//            }
+//
+//            Picker("분", selection: $selectedMinutes) {
+//                ForEach(0..<60, id: \.self) { minute in
+//                    Text("\(minute) min")
+//                }
+//            }
+//            .frame(width: 100)
+//
+//            Picker("초", selection: $selectedSeconds) {
+//                ForEach(0..<60, id: \.self) { second in
+//                    Text("\(second) sec")
+//                }
+//            }
+//            .frame(width: 100)
+//        }
+//    }
 }
 
 #Preview {

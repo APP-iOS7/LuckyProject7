@@ -14,14 +14,10 @@ struct AddSomethingView: View {
     
     @State private var title: String = ""
     @State private var isFavorite: Bool = false
-    @State private var descriptions: [String] = []
-    
-    @State private var selectedHours: Int = 0
-    @State private var selectedMinutes: Int = 0
-    @State private var selectedSeconds: Int = 0
-    
     @State private var showAlert: Bool = false
     @State private var isTimer: Bool = false
+    
+    @State private var category: Categorys = Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer, categoryMainFood: .KoreanFood)
     
     // 기본 container를 하나 가집니다.
     @State private var cellInfo: [CellInfo] = [
@@ -43,15 +39,8 @@ struct AddSomethingView: View {
                     topImageView
                     // 중앙 listView
                     middleRecipeView
-                    
-                    //Section {
-                    //                        HStack {
-                    //                            Text("즐겨찾기")
-                    //                            Spacer()
-                    //                            StarToggleView(isFavorite: $isFavorite)
-                    //                        }
-                    //                    }
-                    //                    .padding(.horizontal)
+                    // 즐겨찾기 뷰
+                    starView
                 }
                 .frame(maxHeight: .infinity)
                 .navigationTitle("레시피 수정")
@@ -66,6 +55,17 @@ struct AddSomethingView: View {
         .alert("타이틀을 입력해주세요", isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
         }
+    }
+    
+    private var starView: some View {
+        Section {
+            HStack {
+                Text("즐겨찾기")
+                Spacer()
+                StarToggleView(isFavorite: $isFavorite)
+            }
+        }
+        .padding()
     }
     
     private var topTextField: some View {
@@ -118,9 +118,8 @@ struct AddSomethingView: View {
             if title.isEmpty {
                 showAlert = true
             } else {
-//                let totalTime = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
-//                let something = SomethingItem(title: title, cellInfo: cellInfo, isFavorite: isFavorite, categories: [])
-//                modelContext.insert(something)
+                let something = SomethingItem(title: title, cellInfo: cellInfo, isFavorite: isFavorite, categories: category)
+                modelContext.insert(something)
                 dismiss()
             }
         }
@@ -135,28 +134,3 @@ struct AddSomethingView: View {
 #Preview {
     AddSomethingView()
 }
-
-//    func timerView() -> some View {
-//        HStack {
-//            Picker("시", selection: $selectedHours) {
-//                ForEach(0..<24, id: \.self) { hour in
-//                    Text("\(hour) hour")
-//                }
-//            }
-//
-//            Picker("분", selection: $selectedMinutes) {
-//                ForEach(0..<60, id: \.self) { minute in
-//                    Text("\(minute) min")
-//                }
-//            }
-//
-//            .frame(width: 100)
-//
-//            Picker("초", selection: $selectedSeconds) {
-//                ForEach(0..<60, id: \.self) { second in
-//                    Text("\(second) sec")
-//                }
-//            }
-//            .frame(width: 100)
-//        }
-//    }
