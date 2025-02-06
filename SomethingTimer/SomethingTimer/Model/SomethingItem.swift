@@ -19,12 +19,14 @@ final class SomethingItem {
     @Relationship(deleteRule: .cascade) var cellInfo: [CellInfo] // 관계형 데이터
     var isFavorite: Bool
     var categories: Categorys
+    var selectedImage: Data
     
-    init(title: String, cellInfo: [CellInfo], isFavorite: Bool, categories: Categorys) {
+    init(title: String, cellInfo: [CellInfo], isFavorite: Bool, categories: Categorys, selectedImage: Data) {
         self.title = title
         self.cellInfo = cellInfo
         self.isFavorite = isFavorite
         self.categories = categories
+        self.selectedImage = selectedImage
     }
 }
 
