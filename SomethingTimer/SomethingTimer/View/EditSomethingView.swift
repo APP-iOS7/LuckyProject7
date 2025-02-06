@@ -18,11 +18,14 @@ struct EditSomethingView: View {
     let something: SomethingItem
     
     @State private var title: String
-        @State private var isFavorite: Bool
-        @State private var selectedHours: Int
-        @State private var selectedMinutes: Int
-        @State private var selectedSeconds: Int
-        @State private var showAlert: Bool = false
+    @State private var isFavorite: Bool
+    @State private var selectedHours: Int
+    @State private var selectedMinutes: Int
+    @State private var selectedSeconds: Int
+    @State private var showAlert: Bool = false
+    @State private var showImagePicker: Bool = false
+    @State private var selectedImage: UIImage?
+
     /// ** 카테고리 open / close 상태 변수
     @State private var isShowCategory: Bool = false
     // 기본 container를 하나 가집니다.
@@ -78,7 +81,7 @@ struct EditSomethingView: View {
     
     /// ** 상단 Title field View **
     private var topTextField: some View {
-        TextField("Title", text: $title)
+        TextField("레시피의 제목을 입력하세요", text: $title)
             .frame(minHeight: 70,maxHeight: 100)
             .background(.white)
             .clipShape(.rect(cornerRadius: 12))
@@ -87,9 +90,40 @@ struct EditSomethingView: View {
     /// ** 이미지 상단 View **
     private var topImageView: some View {
         RoundedRectangle(cornerRadius: 12)
-            .foregroundStyle(.white)
+            .stroke (
+                Color.white,
+                style: StrokeStyle(
+                    lineWidth: 5,
+                    lineCap: .round,
+                    lineJoin: .round,
+                    dash: [4 , 8]
+                )
+            )
+            .foregroundStyle(.bar)
             .frame(minHeight: 200, maxHeight: 200)
             .padding(.vertical)
+            .overlay {
+                Circle()
+                    .foregroundStyle(.white)
+                    .frame(height: 150)
+                    .overlay {
+                        selectedImage != nil ?
+                            Image(uiImage: selectedImage!)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(.circle)
+                            : Image(systemName: "photo.artframe.circle")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(.circle)
+                    }
+            }
+            .onTapGesture {
+                showImagePicker.toggle()
+            }
+            .sheet(isPresented: $showImagePicker) { // 사진 열기
+                ImagePicker(image: $selectedImage)
+            }
     }
     /// ** 중앙 레시피 View **
     private var middleRecipeView: some View {
@@ -157,6 +191,6 @@ struct EditSomethingView: View {
 
 #Preview {
 
-    EditSomethingView(something: SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "소제목", content: "주저리주저리", timeRemaining: 3600)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer)))
+    EditSomethingView(something: SomethingItem(title: "", cellInfo: [CellInfo(smallTitle: "소제목", content: "주저리주저리", timeRemaining: 3600)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer)))
 }
 

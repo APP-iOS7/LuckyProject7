@@ -53,6 +53,15 @@ struct ShowCategoryView: View {
                                     .fontWeight(.semibold)
                             }
                         }
+                        .onTapGesture {
+                            guard let cookMethod = categorys.categoryCookMethod,
+                                  let ingredient = categorys.categoryIngredient,
+                                  let foodGoal = categorys.categoryFoodGoal,
+                                  let usingTool = categorys.categoryUsingTool
+                            else {
+                                return
+                            }
+                        }
                     }
                 }
                 .padding()
@@ -101,6 +110,6 @@ struct DetailCategoryModel: Hashable {
 
 #Preview {
     ShowCategoryView(something:
-        SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "소제목", content: "주저리주저리", timeRemaining: 3600)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer)
+                        SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "소제목", content: "주저리주저리", timeRemaining: 3600)], isFavorite: false, categories: Categorys(categoryCookMethod: nil, categoryIngredient: .Eggs, categoryFoodGoal: nil, categoryUsingTool: .AirFryer)
     ))
 }
