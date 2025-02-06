@@ -12,6 +12,9 @@ struct SomethingListView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var something: [SomethingItem]
     
+    
+    @State private var showingAddView = false
+    
     let searchText: String
     
     init(searchText: String = "") {
@@ -25,14 +28,35 @@ struct SomethingListView: View {
     }
     
     var body: some View {
-        List {
-            ForEach(something.sorted { $0.isFavorite && !$1.isFavorite }) { item in
-                SomethingRowView(item: item)
+        NavigationStack {
+            VStack {
+                Spacer().frame(height: 16)
+                
+                List {
+                    ForEach(something.sorted { $0.isFavorite && !$1.isFavorite }) { item in
+                        SomethingRowView(item: item)
+                    }
+                    .onDelete(perform: deleteItems)
+                    .listRowSeparator(.hidden)
+                }
+                .listStyle(.plain)
             }
-            .onDelete(perform: deleteItems)
-            .listRowSeparator(.hidden)
+            .navigationTitle("레시피 목록")
+            .font(.headline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showingAddView = true
+                    }) {
+                        Text("더하기")
+                            .font(.title2)
+                    }
+                }
+            }
+            .sheet(isPresented: $showingAddView) {
+                AddSomethingView()
+            }
         }
-        .listStyle(.plain)
     }
     
     private func deleteItems(offsets: IndexSet) {
