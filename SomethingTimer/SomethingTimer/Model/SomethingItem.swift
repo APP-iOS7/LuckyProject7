@@ -29,7 +29,8 @@ final class SomethingItem {
 }
 
 @Model
-final class CellInfo {
+final class CellInfo: Identifiable {
+    var id = UUID()
     var smallTitle: String
     var content: String
     var timeRemaining: Int?

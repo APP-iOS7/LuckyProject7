@@ -61,4 +61,5 @@ struct DetailCategoryModel {
     ShowCategoryView(something:
                         SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "소제목", content: "주저리주저리", timeRemaining: 3600)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer, categoryMainFood: .KoreanFood))
     )
+
 }

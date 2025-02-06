@@ -10,119 +10,162 @@ import SwiftData
 import AVFoundation
 
 struct SomethingDetailView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Environment(\.dismiss) private var dismiss
     
-    @State private var timeRemaining: Int
-    @State private var isRunning: Bool = false
+    let item: SomethingItem
+    @State private var currentIndex: Int = 0
     @State private var showingEditView: Bool = false
     
-    var item: SomethingItem
-    var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    
-    private var totalTime: Int {
-        item.cellInfo.compactMap { $0.timeRemaining }.reduce(0, +)
-    }
-    
-    private var progress: CGFloat {
-        guard timeRemaining > 0 else { return 0 }
-        return CGFloat(timeRemaining) / CGFloat(totalTime)
-    }
-    
-    init(item: SomethingItem) {
-        self.item = item
-        _timeRemaining = State(initialValue: item.cellInfo.compactMap { $0.timeRemaining }.reduce(0, +))
-    }
-    
     var body: some View {
-        NavigationStack {
-            Text("\(item.title)")
-            
-            ZStack {
-                Circle()
-                    .stroke(lineWidth: 10)
-                    .foregroundColor(.gray.opacity(0.2)) // 배경 원
-                Circle()
-                    .trim(from: 0, to: progress) // 시간에 따른 채워지는 부분
-                    .stroke(style: StrokeStyle(lineWidth: 10, lineCap: .round))
-                    .foregroundColor(.blue) // 진행 상태 색상
-                    .rotationEffect(.degrees(-90)) // 0도가 상단이 되도록 회전
-                    .animation(.easeInOut(duration: 0.5), value: progress) // 애니메이션
-            }
-            .frame(width: 200, height: 200)
-            .padding()
-            
-            VStack {
-                Text("\(String(format: "%02d", timeRemaining / 3600)):\(String(format: "%02d", (timeRemaining % 3600) / 60)):\(String(format: "%02d", timeRemaining % 60))")
-                    .font(.system(size: 30, weight: .bold))
-                    .padding()
-            }
+        VStack {
+            Text(item.title)
+                .font(.largeTitle)
+                .padding()
             
             HStack {
-                // 재생 / 일시 정지 버튼
                 Button(action: {
-                    isRunning.toggle()
-                }, label: {
-                    Image(systemName: isRunning ? "pause.fill" : "play.fill")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 30, height: 30)
-                        .padding()
-                })
+                    if currentIndex > 0 { currentIndex -= 1 }
+                }) {
+                    Image(systemName: "chevron.left")
+                        .font(.largeTitle)
+                        .foregroundColor(currentIndex > 0 ? .blue : .gray)
+                }
+                .disabled(currentIndex == 0)
                 
-                // 리셋 버튼
+                Spacer()
+                
+                Text("Step \(currentIndex + 1) / \(item.cellInfo.count)")
+                    .font(.headline)
+                    .padding()
+                
+                Spacer()
+                
                 Button(action: {
-                    isRunning = false
-                    timeRemaining = totalTime
-                }, label: {
-                    Image(systemName: "arrow.clockwise")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 30, height: 30)
-                        .padding()
-                })
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Delete") {
-                        modelContext.delete(item)
-                        // 오류 처리 추가
-                        do {
-                            try modelContext.save() // 오류가 발생할 수 있어 'try' 사용
-                            dismiss() // 삭제 후 화면 닫기
-                        } catch {
-                            // 오류 처리: 오류 메시지를 사용자에게 알릴 수 있습니다.
-                            print("Error deleting item: \(error.localizedDescription)")
-                        }
-                    }
+                    if currentIndex < item.cellInfo.count - 1 { currentIndex += 1 }
+                }) {
+                    Image(systemName: "chevron.right")
+                        .font(.largeTitle)
+                        .foregroundColor(currentIndex < item.cellInfo.count - 1 ? .blue : .gray)
                 }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Edit") {
-                        showingEditView = true
-                    }
+                .disabled(currentIndex == item.cellInfo.count - 1) // 마지막 단계에서는 버튼 비활성화
+            }
+            .padding()
+            
+            TabView(selection: $currentIndex) {
+                ForEach(item.cellInfo.indices, id: \.self) { index in
+                    RecipeStepView(cellInfo: item.cellInfo[index])
+                        .tag(index)
                 }
             }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         }
+        .background(Color(red: 0.85, green: 1.0, blue: 0.85).edgesIgnoringSafeArea(.all))
         .navigationTitle(item.title)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("수정과") {
+                    showingEditView = true
+                }
+            }
+        }
         .sheet(isPresented: $showingEditView) {
-            EditSomethingView(something: item) // timeRemaining만 전달
+            EditSomethingView(something: item)
         }
-        .onReceive(timer) { _ in
-            if isRunning && timeRemaining > 0 {
-                timeRemaining -= 1
+        .font(.headline)
+        .foregroundColor(.white)
+        .shadow(radius: 3)
+    }
+}
+
+struct RecipeStepView: View {
+    let cellInfo: CellInfo
+    
+    var body: some View {
+        VStack {
+            Text(cellInfo.smallTitle)
+                .font(.title)
+                .padding()
+            
+            Text(cellInfo.content)
+                .padding()
+            
+            if let time = cellInfo.timeRemaining, time > 0 {
+                TimerView(remainingTime: time) // 타이머 추가
             }
         }
-        .onChange(of: timeRemaining, initial: true) {
-            // 타이머가 0이 되면 소리만 울리도록
-            if timeRemaining == 0 {
-                try! SoundManager.shared.playSound(fileName: "cookEndSound", type: "mp3") // player에 AVAudioPlayer를 넣습니다
-                SoundManager.shared.play() // 시작
-                isRunning = false
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.white)
+        .cornerRadius(12)
+        .shadow(radius: 5)
+        .padding()
+    }
+}
+
+struct TimerView: View {
+    @State var remainingTime: Int
+    @State private var timerRunning: Bool = false
+    @State private var timer: Timer?
+    
+    var body: some View {
+        VStack {
+            Text("남은 시간: \(formatTime(remainingTime))")
+                .font(.title2)
+                .padding()
+            
+            if timerRunning {
+                Button("일시정지") {
+                    timerRunning = false
+                    timer?.invalidate()
+                }
+            } else {
+                Button(timer == nil ? "시작" : "재개") {
+                    startTimer()
+                }
             }
         }
+        .onDisappear {
+            timer?.invalidate()
+        }
+    }
+    
+    private func startTimer() {
+        timerRunning = true
+        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+            if remainingTime > 0 {
+                remainingTime -= 1
+            } else {
+                timer.invalidate()
+                self.timer = nil
+                timerRunning = false
+                try! SoundManager.shared.playSound(fileName: "cookEndSound", type: "mp3")
+                SoundManager.shared.play()
+            }
+        }
+    }
+    
+    private func formatTime(_ seconds: Int) -> String {
+        let minutes = seconds / 60
+        let seconds = seconds % 60
+        return String(format: "%02d:%02d", minutes, seconds)
     }
 }
 
 #Preview {
-    SomethingDetailView(item: SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "Step 1", content: "설명", timeRemaining: 60)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer, categoryMainFood: .ChineseFood)))
+    SomethingDetailView(item: SomethingItem(
+        title: "Recipe",
+        cellInfo: [
+            CellInfo(smallTitle: "Step 1", content: "Mix ingredients", timeRemaining: nil),
+            CellInfo(smallTitle: "Step 2", content: "Bake in oven", timeRemaining: 10),
+            CellInfo(smallTitle: "Step 3", content: "Let it cool", timeRemaining: nil)
+        ],
+        isFavorite: false,
+        categories: Categorys(
+            categoryCookMethod: .baking,
+            categoryIngredient: .Eggs,
+            categoryFoodGoal: .BudgetFriendly,
+            categoryUsingTool: .AirFryer,
+            categoryMainFood: .KoreanFood
+        )
+    ))
 }
+
+

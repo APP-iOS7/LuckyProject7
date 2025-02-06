@@ -18,11 +18,11 @@ struct EditSomethingView: View {
     let something: SomethingItem
     
     @State private var title: String
-    @State private var isFavorite: Bool
-    @State private var selectedHours: Int
-    @State private var selectedMinutes: Int
-    @State private var selectedSeconds: Int
-    @State private var showAlert: Bool = false
+        @State private var isFavorite: Bool
+        @State private var selectedHours: Int
+        @State private var selectedMinutes: Int
+        @State private var selectedSeconds: Int
+        @State private var showAlert: Bool = false
     /// ** 카테고리 open / close 상태 변수
     @State private var isShowCategory: Bool = false
     // 기본 container를 하나 가집니다.
@@ -36,6 +36,7 @@ struct EditSomethingView: View {
         self._selectedHours = State(initialValue: something.cellInfo[0].timeRemaining ?? 0 / 3600)
         self._selectedMinutes = State(initialValue: (something.cellInfo[0].timeRemaining ?? 0 % 3600) / 60)
         self._selectedSeconds = State(initialValue: something.cellInfo[0].timeRemaining ?? 0 % 60)
+
     }
     
     var body: some View {
@@ -121,6 +122,7 @@ struct EditSomethingView: View {
     ///** Save Button View **
     private var saveButton: some View {
         Button("저장") {
+
 //            if title.isEmpty || selectedHours == 0 && selectedMinutes == 0 && selectedSeconds == 0 {
 //                showAlert = true
 //            } else {
@@ -138,6 +140,7 @@ struct EditSomethingView: View {
 //                    print("Error saving context: \(error.localizedDescription)")
 //                }
 //            }
+
         }
         .frame(maxWidth: .infinity, minHeight: 50)
         .font(.title3)
@@ -154,5 +157,6 @@ struct EditSomethingView: View {
 
 #Preview {
     EditSomethingView(something: SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "소제목", content: "주저리주저리", timeRemaining: 3600)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer, categoryMainFood: .KoreanFood)))
+
 }
 
