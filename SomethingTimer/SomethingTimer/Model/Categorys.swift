@@ -10,7 +10,7 @@
 /// let cookMethod = CategoryCookMethod.boiling
 /// cookMethod.rawValue // 끓이기
 /// cookMethod.imageName // 이미지 이름
-enum CategoryCookMethod: String, Codable {
+enum CategoryCookMethod: String, Codable, CaseIterable {
     case boiling = "끓이기"
     case baking = "굽기"
     case stirFrying = "볶기"
@@ -30,7 +30,7 @@ enum CategoryCookMethod: String, Codable {
 }
 
 /// ** 재료 관련 카테고리 **
-enum Categoryingredient: String, Codable {
+enum Categoryingredient: String, Codable, CaseIterable {
     case Meat = "고기"
     case Seafood = "해산물"
     case Vegetarian = "야채"
@@ -51,7 +51,7 @@ enum Categoryingredient: String, Codable {
 }
 
 /// ** 음식의 목표 카테고리 **
-enum CategoryFoodGoal: String, Codable {
+enum CategoryFoodGoal: String, Codable, CaseIterable {
     case Diet = "다이어트"
     case NoMeat = "채식주의"
     case HighProtein = "고단백질"
@@ -72,7 +72,7 @@ enum CategoryFoodGoal: String, Codable {
 }
 
 /// ** 사용 기구 카테고리 **
-enum CategoryUsingTool: String, Codable {
+enum CategoryUsingTool: String, Codable, CaseIterable {
     case AirFryer = "에어프라이"
     case Oven = "오븐"
     case Microwave = "전자렌지"
@@ -89,7 +89,7 @@ enum CategoryUsingTool: String, Codable {
 }
 
 // ** ContentView 전에 CategoryView
-enum CategoryMainFood: String, Codable {
+enum CategoryMainFood: String, Codable, CaseIterable {
     case KoreanFood = "한식"
     case WesternFood = "양식"
     case ChineseFood = "중식"
