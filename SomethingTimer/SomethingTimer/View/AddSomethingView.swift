@@ -119,8 +119,8 @@ struct AddSomethingView: View {
                 showAlert = true
             } else {
 //                let totalTime = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
-                let something = SomethingItem(title: title, cellInfo: cellInfo, isFavorite: isFavorite, categories: [])
-                modelContext.insert(something)
+//                let something = SomethingItem(title: title, cellInfo: cellInfo, isFavorite: isFavorite, categories: [])
+//                modelContext.insert(something)
                 dismiss()
             }
         }
