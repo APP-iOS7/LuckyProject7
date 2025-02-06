@@ -156,7 +156,7 @@ struct AddSomethingView: View {
             if title.isEmpty {
                 showAlert = true
             } else {
-                let something = SomethingItem(title: title, cellInfo: cellInfo, isFavorite: isFavorite, categories: category)
+                let something = SomethingItem(title: title, cellInfo: cellInfo, isFavorite: isFavorite, categories: category,selectedImage: Data())
                 modelContext.insert(something)
                 dismiss()
             }

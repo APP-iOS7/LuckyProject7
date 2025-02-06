@@ -10,31 +10,32 @@ import SwiftData
 
 struct SomethingListView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var something: [SomethingItem]
-    
-    
+    @Query private var categorysRecipes: [RecipesByCategory]
     @State private var showingAddView = false
-    
     let searchText: String
+    var selectedCategory: CategoryMainFood
     
-    init(searchText: String = "") {
+    init(selectedCategory: CategoryMainFood ,searchText: String = "") {
         self.searchText = searchText
-        
-        let predicate = #Predicate<SomethingItem> { something in
-            searchText.isEmpty ? true : something.title.contains(searchText) == true
-        }
-        
-        _something = Query(filter: predicate, sort: [SortDescriptor(\SomethingItem.title)])
+        self.selectedCategory = selectedCategory
+//
+//        let predicate = #Predicate<SomethingItem> { something in
+//            searchText.isEmpty ? true : something.title.contains(searchText) == true
+//        }
+//        
+//        _something = Query(filter: predicate, sort: [SortDescriptor(\SomethingItem.title)])
     }
-    
     var body: some View {
         NavigationStack {
             VStack {
                 Spacer().frame(height: 16)
-                
                 List {
-                    ForEach(something.sorted { $0.isFavorite && !$1.isFavorite }) { item in
-                        SomethingRowView(item: item)
+                    ForEach(categorysRecipes.filter { $0.selectedCategory == selectedCategory }, id: \.selectedCategory) { category in
+                        // SomethingItem만 순회하기 위해 category.somethingItems를 ForEach로 순회
+                        ForEach(category.somethingItems, id: \.title) { item in
+                            SomethingRowView(item: item)
+                        }
+                        .listRowSeparator(.hidden)
                     }
                     .onDelete(perform: deleteItems)
                     .listRowSeparator(.hidden)
@@ -53,6 +54,10 @@ struct SomethingListView: View {
                     }
                 }
             }
+            .onAppear {
+                print("각 나라별 : ", selectedCategory)
+                print("recipes : ", categorysRecipes)
+            }
             .sheet(isPresented: $showingAddView) {
                 AddSomethingView()
             }
@@ -61,9 +66,9 @@ struct SomethingListView: View {
     
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
-            for index in offsets {
-                modelContext.delete(something[index])
-            }
+//            for index in offsets {
+//                modelContext.delete(something[index])
+//            }
             
             // 모델 컨텍스트 저장 후 삭제 사항 반영
             do {
@@ -77,6 +82,6 @@ struct SomethingListView: View {
 
 
 #Preview {
-    SomethingListView()
+    SomethingListView(selectedCategory: .KoreanFood)
         .modelContainer(PreviewContainer.shared.container)
 }

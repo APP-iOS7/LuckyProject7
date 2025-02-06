@@ -82,7 +82,7 @@ struct SomethingDetailView: View {
         .navigationTitle(item.title)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button("수정과") {
+                Button("수정") {
                     showingEditView = true
                 }
                 .foregroundColor(.blue)
@@ -180,7 +180,7 @@ struct TimerView: View {
 }
 
 #Preview {
-    SomethingDetailView(item: SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "Step 1", content: "설명", timeRemaining: 60)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer)))
+    SomethingDetailView(item: SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "Step 1", content: "설명", timeRemaining: 60)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer),selectedImage: Data()))
 }
 
 

@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -19,7 +20,6 @@ struct ContentView: View {
             .padding(.top, 20)
             .background(Color.green.opacity(0.2))
         }
-
     }
     
 }

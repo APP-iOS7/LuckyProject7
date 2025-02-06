@@ -9,37 +9,39 @@ import SwiftUI
 import SwiftData
 
 struct CategoryMainFoodList {
-    static let foodCategorys: [CategoryMainFood] = [
-        .KoreanFood, .ChineseFood, .JapaneseFood, .WesternFood, .SoutheastFood, .EtcFood
+    static let foodCategorys: [RecipesByCategory] = [
+        RecipesByCategory(selectedCategory: .KoreanFood, somethingItems: []),
+        RecipesByCategory(selectedCategory: .ChineseFood, somethingItems: []),
+        RecipesByCategory(selectedCategory: .JapaneseFood, somethingItems: []),
+        RecipesByCategory(selectedCategory: .WesternFood, somethingItems: []),
+        RecipesByCategory(selectedCategory: .SoutheastFood, somethingItems: []),
+        RecipesByCategory(selectedCategory: .EtcFood, somethingItems: []),
     ]
 }
 
 struct GridView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var somethingItems: [SomethingItem]
-    
+
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
-    
-    
+
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
                 ForEach(CategoryMainFoodList.foodCategorys, id: \.self) { category in
-                    NavigationLink(destination: SomethingListView()) {
-                        SomethingGridView(category: category)
+                    NavigationLink(destination: SomethingListView(selectedCategory: category.selectedCategory)) {
+                        SomethingGridView(category: category.selectedCategory)
                     }
                 }
+                
             }
             .padding(.top, 40)
             .padding()
         }
-        
     }
 }
 
 struct SomethingGridView: View {
     let category: CategoryMainFood
-    
     var body: some View {
         VStack {
             Image(category.imageName)
@@ -58,7 +60,6 @@ struct SomethingGridView: View {
                 .foregroundColor(.black.opacity(0.8))
                 .padding(.top, 8)
         }
-        
         .padding()
         .frame(width: 160, height: 180)
         .background(getCategoryColor(for: category))

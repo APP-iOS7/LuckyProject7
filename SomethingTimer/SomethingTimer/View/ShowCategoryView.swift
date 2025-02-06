@@ -96,5 +96,7 @@ struct DetailCategoryModel: Hashable {
 }
 
 #Preview {
-    ShowCategoryView(categories: .constant(Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer)))
+    ShowCategoryView(
+        categories: .constant(Categorys(categoryCookMethod: nil, categoryIngredient: .Eggs, categoryFoodGoal: nil, categoryUsingTool: .AirFryer))
+    )
 }
