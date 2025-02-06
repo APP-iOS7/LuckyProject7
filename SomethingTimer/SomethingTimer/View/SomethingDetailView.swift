@@ -150,22 +150,9 @@ struct TimerView: View {
 }
 
 #Preview {
-    SomethingDetailView(item: SomethingItem(
-        title: "Recipe",
-        cellInfo: [
-            CellInfo(smallTitle: "Step 1", content: "Mix ingredients", timeRemaining: nil),
-            CellInfo(smallTitle: "Step 2", content: "Bake in oven", timeRemaining: 10),
-            CellInfo(smallTitle: "Step 3", content: "Let it cool", timeRemaining: nil)
-        ],
-        isFavorite: false,
-        categories: Categorys(
-            categoryCookMethod: .baking,
-            categoryIngredient: .Eggs,
-            categoryFoodGoal: .BudgetFriendly,
-            categoryUsingTool: .AirFryer,
-            categoryMainFood: .KoreanFood
-        )
-    ))
+
+    SomethingDetailView(item: SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "Step 1", content: "설명", timeRemaining: 60)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer)))
+
 }
 
 

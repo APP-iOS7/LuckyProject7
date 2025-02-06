@@ -14,7 +14,6 @@ struct ContentView: View {
             VStack {
                 AnimatedTitleView() // 애니메이션 효과 적용된 타이틀 추가
                     .padding(.top, 10) // 상단 여백 조정
-                
                 GridView()
             }
             .padding(.top, 20)

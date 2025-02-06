@@ -115,9 +115,8 @@ enum CategoryMainFood: String, Codable, CaseIterable {
 /// 3. 목표
 /// 4. 도구
 struct Categorys: Codable {
-    var categoryCookMethod: CategoryCookMethod
-    var categoryIngredient: Categoryingredient
-    var categoryFoodGoal: CategoryFoodGoal
-    var categoryUsingTool: CategoryUsingTool
-    var categoryMainFood: CategoryMainFood // 메인에 나올 카테고리
+    var categoryCookMethod: CategoryCookMethod?
+    var categoryIngredient: Categoryingredient?
+    var categoryFoodGoal: CategoryFoodGoal?
+    var categoryUsingTool: CategoryUsingTool?
 }
