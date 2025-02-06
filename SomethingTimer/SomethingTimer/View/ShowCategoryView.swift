@@ -70,7 +70,6 @@ struct ShowCategoryView: View {
                 .padding()
             }
     }
-
     //something.categories.categoryCookMethod.rawValue == category.name ? .red : .white
     /// ** Color 변환기 생성 **
     ///  레시피는 categorys를 가지고 있고 해당 enum 값들 마다 true인값이 현재 분류된 Category 이다
