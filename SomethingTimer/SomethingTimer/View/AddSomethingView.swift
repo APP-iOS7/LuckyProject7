@@ -14,11 +14,10 @@ struct AddSomethingView: View {
     
     @State private var title: String = ""
     @State private var isFavorite: Bool = false
-    
-    @State private var isShowCategory: Bool = false
     @State private var showAlert: Bool = false
+    @State private var isTimer: Bool = false
     
-    @State private var category: Categorys = Categorys(categoryCookMethod: nil, categoryIngredient: nil, categoryFoodGoal: nil, categoryUsingTool: nil)
+    @State private var category: Categorys = Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer)
     
     // 기본 container를 하나 가집니다.
     @State private var cellInfo: [CellInfo] = [
@@ -44,7 +43,7 @@ struct AddSomethingView: View {
                     starView
                 }
                 .frame(maxHeight: .infinity)
-                .navigationTitle("레시피 생성")
+                .navigationTitle("레시피 수정")
                 .navigationBarTitleDisplayMode(.inline)
                 
                 saveButton
@@ -52,9 +51,6 @@ struct AddSomethingView: View {
             }
             .padding(.horizontal)
             .background(.green.opacity(0.2))
-            .sheet(isPresented: $isShowCategory) {
-//                ShowCategoryView(something: )
-            }
         }
         .alert("타이틀을 입력해주세요", isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
@@ -132,11 +128,6 @@ struct AddSomethingView: View {
         .background(.white)
         .foregroundStyle(.green)
         .clipShape(.rect(cornerRadius: 12))
-    }
-    
-    /// ** Category 목록 보여주는 부분 **
-    private func showCategoryBottomSheet() {
-        isShowCategory = true // true -> 카테고리 시트 열림
     }
 }
 

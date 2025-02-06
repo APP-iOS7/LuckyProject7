@@ -8,6 +8,10 @@
 import Foundation
 import SwiftData
 
+
+
+
+
 @Model
 final class SomethingItem {
     var id: String = UUID().uuidString
@@ -25,7 +29,8 @@ final class SomethingItem {
 }
 
 @Model
-final class CellInfo {
+final class CellInfo: Identifiable {
+    var id = UUID()
     var smallTitle: String
     var content: String
     var timeRemaining: Int?

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct TimerSettingView: View {
+struct TimerSettingsView: View {
     @Binding var selectedHours: Int
     @Binding var selectedMinutes: Int
     @Binding var selectedSeconds: Int
@@ -57,6 +57,6 @@ struct TimerSettingView: View {
     }
 }
 
-#Preview{
-    TimerSettingView(selectedHours: .constant(0), selectedMinutes: .constant(0), selectedSeconds: .constant(0)) {}
-}
+//#Preview {
+//    TimerSettingView()
+//}
