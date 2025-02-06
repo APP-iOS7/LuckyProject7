@@ -154,11 +154,16 @@ struct AddSomethingView: View {
     
     private var saveButton: some View {
         Button("저장") {
+            
+            guard let image = selectedImage else {
+                return //살짝 유효성 검사
+            }
+            
             // 타이틀 미 입력 시 알람을 띠우도록 조정
             if title.isEmpty {
                 showAlert = true
             } else {
-                let something = SomethingItem(title: title, cellInfo: cellInfo, isFavorite: isFavorite, categories: categories ,selectedImage: Data())
+                let something = SomethingItem(title: title, cellInfo: cellInfo, isFavorite: isFavorite, categories: categories ,selectedImage: ConvertImageData.shared.convertImageData(uiImage: image))
                 modelContext.insert(something)
                 dismiss()
             }
