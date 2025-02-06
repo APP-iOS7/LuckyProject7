@@ -25,14 +25,17 @@ struct EditSomethingView: View {
     @State private var showAlert: Bool = false
     /// ** 카테고리 open / close 상태 변수
     @State private var isShowCategory: Bool = false
-    
+    // 기본 container를 하나 가집니다.
+    @State private var cellInfo: [CellInfo] = [
+        CellInfo(smallTitle: "", content: "", timeRemaining: nil)
+    ]
     init(something: SomethingItem) {
         self.something = something
         self._title = State(initialValue: something.title)
         self._isFavorite = State(initialValue: something.isFavorite)
-        self._selectedHours = State(initialValue: something.timeRemaining / 3600)
-        self._selectedMinutes = State(initialValue: (something.timeRemaining % 3600) / 60)
-        self._selectedSeconds = State(initialValue: something.timeRemaining % 60)
+        self._selectedHours = State(initialValue: something.cellInfo[0].timeRemaining ?? 0 / 3600)
+        self._selectedMinutes = State(initialValue: (something.cellInfo[0].timeRemaining ?? 0 % 3600) / 60)
+        self._selectedSeconds = State(initialValue: something.cellInfo[0].timeRemaining ?? 0 % 60)
     }
     
     var body: some View {
@@ -102,7 +105,7 @@ struct EditSomethingView: View {
             }
             .padding([.leading, .trailing, .top])
             // 펼쳐지거나 닫히는 container
-            RecipeCellView(stepTitle: .constant("testTitle"), stepDescription: .constant("testDescription"))
+            RecipeCellView(cellInfo: $cellInfo[0])
         }
         .background(.white)
         .clipShape(.rect(cornerRadius: 12))
@@ -118,23 +121,23 @@ struct EditSomethingView: View {
     ///** Save Button View **
     private var saveButton: some View {
         Button("저장") {
-            if title.isEmpty || selectedHours == 0 && selectedMinutes == 0 && selectedSeconds == 0 {
-                showAlert = true
-            } else {
-                something.title = title
-                something.isFavorite = isFavorite
-                something.timeRemaining = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
-                
-                
-                // 오류 처리 추가
-                do {
-                    try modelContext.save() // 오류가 발생할 수 있어 'try' 사용
-                    dismiss() // 저장 후 화면 닫기
-                } catch {
-                    // 오류 처리: 오류 메시지를 사용자에게 알릴 수 있습니다.
-                    print("Error saving context: \(error.localizedDescription)")
-                }
-            }
+//            if title.isEmpty || selectedHours == 0 && selectedMinutes == 0 && selectedSeconds == 0 {
+//                showAlert = true
+//            } else {
+//                something.title = title
+//                something.isFavorite = isFavorite
+//                something.timeRemaining = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
+//                
+//                
+//                // 오류 처리 추가
+//                do {
+//                    try modelContext.save() // 오류가 발생할 수 있어 'try' 사용
+//                    dismiss() // 저장 후 화면 닫기
+//                } catch {
+//                    // 오류 처리: 오류 메시지를 사용자에게 알릴 수 있습니다.
+//                    print("Error saving context: \(error.localizedDescription)")
+//                }
+//            }
         }
         .frame(maxWidth: .infinity, minHeight: 50)
         .font(.title3)
@@ -150,6 +153,6 @@ struct EditSomethingView: View {
 }
 
 #Preview {
-    EditSomethingView(something: SomethingItem(title: "Hello, World!!", timeRemaining: 3600, isFavorite: false, categories: []))
+    EditSomethingView(something: SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "소제목", content: "주저리주저리", timeRemaining: 3600)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer, categoryMainFood: .KoreanFood)))
 }
 
