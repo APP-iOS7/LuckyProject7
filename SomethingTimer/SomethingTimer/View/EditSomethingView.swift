@@ -23,6 +23,8 @@ struct EditSomethingView: View {
     @State private var selectedMinutes: Int
     @State private var selectedSeconds: Int
     @State private var showAlert: Bool = false
+    /// ** 카테고리 open / close 상태 변수
+    @State private var isShowCategory: Bool = false
     
     init(something: SomethingItem) {
         self.something = something
@@ -61,6 +63,9 @@ struct EditSomethingView: View {
             }
             .padding(.horizontal)
             .background(.green.opacity(0.5))
+            .sheet(isPresented: $isShowCategory) {
+                ShowCategoryView(something: something)
+            }
         }
         .alert("타이틀과 시간을 입력해주세요", isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
@@ -89,15 +94,15 @@ struct EditSomethingView: View {
                 Spacer()
                 Image(systemName: "square.grid.2x2")
                     .font(.title)
+                    .onTapGesture {
+                        showCategoryBottomSheet()
+                    }
                 Image(systemName: "plus.circle")
                     .font(.title)
             }
             .padding([.leading, .trailing, .top])
             // 펼쳐지거나 닫히는 container
-            disclosureGroupView
-            disclosureGroupView
-            disclosureGroupView
-            disclosureGroupView
+            RecipeCellView(stepTitle: .constant("testTitle"), stepDescription: .constant("testDescription"))
         }
         .background(.white)
         .clipShape(.rect(cornerRadius: 12))
@@ -136,6 +141,11 @@ struct EditSomethingView: View {
         .background(.white)
         .foregroundStyle(.green)
         .clipShape(.rect(cornerRadius: 12))
+    }
+    
+    /// ** Category 목록 보여주는 부분 **
+    private func showCategoryBottomSheet() {
+        isShowCategory = true // true -> 카테고리 시트 열림
     }
 }
 
