@@ -121,6 +121,7 @@ struct TimerView: View {
                     startTimer()
                 }
             }
+            
         }
         .onDisappear {
             timer?.invalidate()

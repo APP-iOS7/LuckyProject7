@@ -23,6 +23,8 @@ struct SomethingRowView: View {
             MainDetailBox(item: item) // 메인 뷰 detailBox
         }
     }
+    
+    
 }
 
 
