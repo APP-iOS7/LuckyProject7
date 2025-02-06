@@ -18,7 +18,6 @@ struct ContentView: View {
             }
             .padding(.top, 20)
             .background(Color.green.opacity(0.2))
-            
         }
 
     }

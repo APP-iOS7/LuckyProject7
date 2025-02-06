@@ -10,7 +10,7 @@ import SwiftUI
 struct ShowCategoryView: View {
     
     let gridItem: [GridItem] = Array(repeating: GridItem(.flexible()), count: 4) // gridItem 배열
-    var something: SomethingItem// 받아오기
+    var something: SomethingItem // 받아오기
     let allCategories: [DetailCategoryModel] = { // 모든 카테고리 뷰를 받아서 뿌려줍니다.
         let cookMethods = CategoryCookMethod.allCases.map { DetailCategoryModel(name: $0.rawValue, imageName: $0.imageName, defaultColor: .red.opacity(0.3)) }
         let ingredients = Categoryingredient.allCases.map { DetailCategoryModel(name: $0.rawValue, imageName: $0.imageName,defaultColor: .blue.opacity(0.3)) }
@@ -51,6 +51,11 @@ struct ShowCategoryView: View {
                                 Text(category.name)
                                     .font(.callout)
                                     .fontWeight(.semibold)
+                            }
+                        }
+                        .onTapGesture {
+                            if categorys.categoryIngredient?.rawValue != category.name {
+                                print(categorys.categoryIngredient?.rawValue ?? "nil")
                             }
                         }
                     }
@@ -101,6 +106,6 @@ struct DetailCategoryModel: Hashable {
 
 #Preview {
     ShowCategoryView(something:
-        SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "소제목", content: "주저리주저리", timeRemaining: 3600)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer)
+                        SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "소제목", content: "주저리주저리", timeRemaining: 3600)], isFavorite: false, categories: Categorys(categoryCookMethod: nil, categoryIngredient: .Eggs, categoryFoodGoal: nil, categoryUsingTool: .AirFryer)
     ))
 }

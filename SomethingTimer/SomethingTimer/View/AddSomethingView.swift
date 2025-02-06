@@ -16,6 +16,8 @@ struct AddSomethingView: View {
     @State private var isFavorite: Bool = false
     @State private var showAlert: Bool = false
     @State private var isTimer: Bool = false
+    @State private var showImagePicker: Bool = false
+    @State private var selectedImage: UIImage? // 해당 값은 생성된 사진을 받아와야 함.
     
     @State private var category: Categorys = Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer)
     
@@ -69,7 +71,7 @@ struct AddSomethingView: View {
     }
     
     private var topTextField: some View {
-        TextField("Title", text: $title)
+        TextField("레시피의 제목을 입력하세요", text: $title)
             .frame(minHeight: 70,maxHeight: 100)
             .background(.white)
             .clipShape(.rect(cornerRadius: 12))
@@ -78,9 +80,40 @@ struct AddSomethingView: View {
     /// ** 이미지 상단 View **
     private var topImageView: some View {
         RoundedRectangle(cornerRadius: 12)
-            .foregroundStyle(.white)
+            .stroke (
+                Color.white,
+                style: StrokeStyle(
+                    lineWidth: 5,
+                    lineCap: .round,
+                    lineJoin: .round,
+                    dash: [4 , 8]
+                )
+            )
+            .foregroundStyle(.bar)
             .frame(minHeight: 200, maxHeight: 200)
             .padding(.vertical)
+            .overlay {
+                Circle()
+                    .foregroundStyle(.white)
+                    .frame(height: 150)
+                    .overlay {
+                        selectedImage != nil ?
+                            Image(uiImage: selectedImage!)
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(.circle)
+                            : Image(systemName: "photo.artframe.circle")
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .clipShape(.circle)
+                    }
+            }
+            .onTapGesture {
+                showImagePicker.toggle()
+            }
+            .sheet(isPresented: $showImagePicker) { // 사진 열기
+                ImagePicker(image: $selectedImage)
+            }
     }
     /// ** 중앙 레시피 View **
     private var middleRecipeView: some View {
