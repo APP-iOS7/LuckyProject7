@@ -8,10 +8,6 @@
 import Foundation
 import SwiftData
 
-
-
-
-
 @Model
 final class SomethingItem {
     var id: String = UUID().uuidString
