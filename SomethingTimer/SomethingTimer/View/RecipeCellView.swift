@@ -38,7 +38,7 @@ struct RecipeCellView: View {
             .padding()
         }
         .sheet(isPresented: $isTimerSheetPresented) {
-            TimerSettingView(
+            TimerSettingsView(
                 selectedHours: $selectedHours,
                 selectedMinutes: $selectedMinutes,
                 selectedSeconds: $selectedSeconds,
