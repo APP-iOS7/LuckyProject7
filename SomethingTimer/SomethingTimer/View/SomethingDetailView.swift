@@ -17,17 +17,34 @@ struct SomethingDetailView: View {
     
     var body: some View {
         VStack {
-            Text(item.title)
-                .font(.largeTitle)
-                .padding()
+            VStack {
+                Text(item.title)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .foregroundColor(.black)
+                    .padding(.top, 20)
+                
+                ProgressView(value: Double(currentIndex + 1), total: Double(item.cellInfo.count))
+                    .progressViewStyle(LinearProgressViewStyle(tint: .black))
+                    .frame(width: 200)
+            }
+            .frame(maxWidth: .infinity)
+            .padding()
+            .background(Color.white)
+            .cornerRadius(15)
+            .padding(.horizontal)
             
             HStack {
+  
                 Button(action: {
                     if currentIndex > 0 { currentIndex -= 1 }
                 }) {
                     Image(systemName: "chevron.left")
-                        .font(.largeTitle)
-                        .foregroundColor(currentIndex > 0 ? .blue : .gray)
+                        .font(.title)
+                        .padding()
+                        .background(Color.white.opacity(0.8))
+                        .clipShape(Circle())
+                        .shadow(radius: 3)
                 }
                 .disabled(currentIndex == 0)
                 
@@ -43,36 +60,37 @@ struct SomethingDetailView: View {
                     if currentIndex < item.cellInfo.count - 1 { currentIndex += 1 }
                 }) {
                     Image(systemName: "chevron.right")
-                        .font(.largeTitle)
-                        .foregroundColor(currentIndex < item.cellInfo.count - 1 ? .blue : .gray)
+                        .font(.title)
+                        .padding()
+                        .background(Color.white.opacity(0.8))
+                        .clipShape(Circle())
+                        .shadow(radius: 3)
                 }
-                .disabled(currentIndex == item.cellInfo.count - 1) // 마지막 단계에서는 버튼 비활성화
+                .disabled(currentIndex == item.cellInfo.count - 1)
             }
-            .padding()
+            .padding(.horizontal)
             
             TabView(selection: $currentIndex) {
-                ForEach(item.cellInfo.indices, id: \.self) { index in
+                ForEach(item.cellInfo.indices, id: \ .self) { index in
                     RecipeStepView(cellInfo: item.cellInfo[index])
                         .tag(index)
                 }
             }
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         }
-        .background(Color(red: 0.85, green: 1.0, blue: 0.85).edgesIgnoringSafeArea(.all))
+        .background(Color.green.opacity(0.2).edgesIgnoringSafeArea(.all))
         .navigationTitle(item.title)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("수정과") {
                     showingEditView = true
                 }
+                .foregroundColor(.blue)
             }
         }
         .sheet(isPresented: $showingEditView) {
             EditSomethingView(something: item)
         }
-        .font(.headline)
-        .foregroundColor(.white)
-        .shadow(radius: 3)
     }
 }
 
@@ -83,13 +101,19 @@ struct RecipeStepView: View {
         VStack {
             Text(cellInfo.smallTitle)
                 .font(.title)
-                .padding()
+                .fontWeight(.bold)
+                .padding(.bottom, 10)
             
             Text(cellInfo.content)
                 .padding()
+                .frame(maxWidth: .infinity)
+                .background(Color.white.opacity(0.8))
+                .cornerRadius(10)
+                .shadow(radius: 3)
+                .padding()
             
             if let time = cellInfo.timeRemaining, time > 0 {
-                TimerView(remainingTime: time) // 타이머 추가
+                TimerView(remainingTime: time)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -111,17 +135,22 @@ struct TimerView: View {
                 .font(.title2)
                 .padding()
             
-            if timerRunning {
-                Button("일시정지") {
-                    timerRunning = false
-                    timer?.invalidate()
+            HStack {
+                Button(timerRunning ? "일시정지" : "시작") {
+                    if timerRunning {
+                        timerRunning = false
+                        timer?.invalidate()
+                    } else {
+                        startTimer()
+                    }
                 }
-            } else {
-                Button(timer == nil ? "시작" : "재개") {
-                    startTimer()
-                }
+                .padding()
+                .frame(width: 100)
+                .background(timerRunning ? Color.red : Color.green)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+                .shadow(radius: 2)
             }
-            
         }
         .onDisappear {
             timer?.invalidate()
@@ -151,9 +180,8 @@ struct TimerView: View {
 }
 
 #Preview {
-
     SomethingDetailView(item: SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "Step 1", content: "설명", timeRemaining: 60)], isFavorite: false, categories: Categorys(categoryCookMethod: .baking, categoryIngredient: .Eggs, categoryFoodGoal: .BudgetFriendly, categoryUsingTool: .AirFryer)))
-
 }
+
 
 
