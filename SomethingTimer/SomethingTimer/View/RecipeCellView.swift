@@ -64,7 +64,7 @@ struct RecipeCellView: View {
     
     private func subTitle() -> some View {
         HStack {
-            TextField("조리 단계를 입력하세요", text: $cellInfo.smallTitle)
+            TextField("소제목을 입력하세요", text: $cellInfo.smallTitle)
                 .font(.headline)
                 .foregroundStyle(bgColor)
                 .frame(alignment: .leading)
