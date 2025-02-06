@@ -10,7 +10,7 @@ import SwiftUI
 struct ShowCategoryView: View {
     
     let gridItem: [GridItem] = Array(repeating: GridItem(.flexible()), count: 4) // gridItem 배열
-    var something: SomethingItem// 받아오기
+    var something: SomethingItem // 받아오기
     let allCategories: [DetailCategoryModel] = { // 모든 카테고리 뷰를 받아서 뿌려줍니다.
         let cookMethods = CategoryCookMethod.allCases.map { DetailCategoryModel(name: $0.rawValue, imageName: $0.imageName, defaultColor: .red.opacity(0.3)) }
         let ingredients = Categoryingredient.allCases.map { DetailCategoryModel(name: $0.rawValue, imageName: $0.imageName,defaultColor: .blue.opacity(0.3)) }
@@ -54,12 +54,8 @@ struct ShowCategoryView: View {
                             }
                         }
                         .onTapGesture {
-                            guard let cookMethod = categorys.categoryCookMethod,
-                                  let ingredient = categorys.categoryIngredient,
-                                  let foodGoal = categorys.categoryFoodGoal,
-                                  let usingTool = categorys.categoryUsingTool
-                            else {
-                                return
+                            if categorys.categoryIngredient?.rawValue != category.name {
+                                print(categorys.categoryIngredient?.rawValue ?? "nil")
                             }
                         }
                     }
