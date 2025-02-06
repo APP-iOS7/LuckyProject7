@@ -27,5 +27,5 @@ struct SomethingRowView: View {
 
 
 #Preview {
-    SomethingRowView(item: SomethingItem(title: "Hello, World!!", timeRemaining: 3600, isFavorite: false, categories: []))
+    SomethingRowView(item: SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "Step 1", content: "설명", timeRemaining: 60)], isFavorite: false, categories: []))
 }
