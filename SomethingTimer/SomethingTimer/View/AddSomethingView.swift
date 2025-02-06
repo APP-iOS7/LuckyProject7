@@ -21,7 +21,7 @@ struct AddSomethingView: View {
     @State private var isShowCategory: Bool = false
     @State private var showAlert: Bool = false
     
-    @State private var category: Categorys = Categorys(categoryCookMethod: nil, categoryIngredient: nil, categoryFoodGoal: nil, categoryUsingTool: nil)
+    @State private var categories: Categorys = Categorys(categoryCookMethod: nil, categoryIngredient: nil, categoryFoodGoal: nil, categoryUsingTool: nil)
     
     // 기본 container를 하나 가집니다.
     @State private var cellInfo: [CellInfo] = [
@@ -54,9 +54,9 @@ struct AddSomethingView: View {
                 Spacer()
             }
             .padding(.horizontal)
-            .background(.green.opacity(0.2))
+            .background(.green.opacity(0.5))
             .sheet(isPresented: $isShowCategory) {
-//                ShowCategoryView(something: )
+                ShowCategoryView(categories: $categories)
             }
         }
         .alert("타이틀을 입력해주세요", isPresented: $showAlert) {
@@ -124,9 +124,11 @@ struct AddSomethingView: View {
     private var middleRecipeView: some View {
         VStack {
             HStack {
+                showCategory()
                 Spacer()
                 Button { // 카테고리 버튼
                     // action: Select category
+                    isShowCategory = true
                 } label: {
                     Image(systemName: "square.grid.2x2")
                         .font(.title)
@@ -156,7 +158,7 @@ struct AddSomethingView: View {
             if title.isEmpty {
                 showAlert = true
             } else {
-                let something = SomethingItem(title: title, cellInfo: cellInfo, isFavorite: isFavorite, categories: category,selectedImage: Data())
+                let something = SomethingItem(title: title, cellInfo: cellInfo, isFavorite: isFavorite, categories: categories ,selectedImage: Data())
                 modelContext.insert(something)
                 dismiss()
             }
@@ -171,6 +173,29 @@ struct AddSomethingView: View {
     /// ** Category 목록 보여주는 부분 **
     private func showCategoryBottomSheet() {
         isShowCategory = true // true -> 카테고리 시트 열림
+    }
+    
+    private func imageView(imageName: String) -> some View {
+        Image(imageName)
+            .resizable()
+            .frame(width: 40, height: 40)
+    }
+    
+    private func showCategory() -> some View {
+        HStack {
+            if let imageName = categories.categoryIngredient?.imageName {
+                imageView(imageName: imageName)
+            }
+            if let imageName = categories.categoryFoodGoal?.imageName {
+                imageView(imageName: imageName)
+            }
+            if let imageName = categories.categoryUsingTool?.imageName {
+                imageView(imageName: imageName)
+            }
+            if let imageName = categories.categoryCookMethod?.imageName {
+                imageView(imageName: imageName)
+            }
+        }
     }
 }
 

@@ -125,10 +125,12 @@ struct EditSomethingView: View {
                 ImagePicker(image: $selectedImage)
             }
     }
+    
     /// ** 중앙 레시피 View **
     private var middleRecipeView: some View {
         VStack {
             HStack {
+                showCategory()
                 Spacer()
                 Button { // 카테고리 버튼
                     isShowCategory = true
@@ -177,6 +179,29 @@ struct EditSomethingView: View {
         .background(.white)
         .foregroundStyle(.green)
         .clipShape(.rect(cornerRadius: 12))
+    }
+    
+    private func imageView(imageName: String) -> some View {
+        Image(imageName)
+            .resizable()
+            .frame(width: 40, height: 40)
+    }
+    
+    private func showCategory() -> some View {
+        HStack {
+            if let imageName = categories.categoryIngredient?.imageName {
+                imageView(imageName: imageName)
+            }
+            if let imageName = categories.categoryFoodGoal?.imageName {
+                imageView(imageName: imageName)
+            }
+            if let imageName = categories.categoryUsingTool?.imageName {
+                imageView(imageName: imageName)
+            }
+            if let imageName = categories.categoryCookMethod?.imageName {
+                imageView(imageName: imageName)
+            }
+        }
     }
 }
 
