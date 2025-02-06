@@ -23,6 +23,10 @@ struct AddSomethingView: View {
     @State private var showAlert: Bool = false
     @State private var isTimer: Bool = false
     
+    // 기본 container를 하나 가집니다.
+    @State private var cellInfo: [CellInfo] = [
+        CellInfo(smallTitle: "", content: "", timeRemaining: nil)
+    ]
     
     @State private var stepTitle: String = ""
     @State private var stepDescription: String = ""
@@ -62,58 +66,6 @@ struct AddSomethingView: View {
         .alert("타이틀을 입력해주세요", isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
         }
-        //        NavigationStack {
-        //            Form {
-        //                Section {
-        //                    TextField("Title", text: $title)
-        //                }
-        //                Section(header: Text("조리 단계").font(.headline)) {
-        //                    HStack() {
-        //                        Spacer()
-        //                        Button {
-        //
-        //                        } label: {
-        //                            Image(systemName: "plus")
-        //                                .foregroundStyle(bgColor)
-        //                        }
-        //                    }
-        ////                    RecipeCellView()
-        ////                    ForEach(descriptions.indices, id: \.self) { index in
-        ////                        TextField("레시피를 작성하세요", text: $descriptions[index])
-        ////                    }
-        //                }
-        //                Section {
-        //                    HStack {
-        //                        Text("즐겨찾기")
-        //                        Spacer()
-        //                        StarToggleView(isFavorite: $isFavorite)
-        //                    }
-        //                }
-        //            }
-        //            .navigationTitle("New Recipe")
-        //            .toolbar {
-        //                ToolbarItem(placement: .navigationBarLeading) {
-        //                    Button("Cancel") {
-        //                        dismiss()
-        //                    }
-        //                }
-        //                ToolbarItem(placement: .navigationBarTrailing) {
-        //                    Button("Save") {
-        //                        if title.isEmpty || selectedHours == 0 && selectedMinutes == 0 && selectedSeconds == 0 {
-        //                            showAlert = true
-        //                        } else {
-        //                            let totalTime = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
-        //                            let somthing = SomethingItem(title: title, timeRemaining: totalTime, isFavorite: isFavorite, categories: [])
-        //                            modelContext.insert(somthing)
-        //                            dismiss()
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //            .alert("타이틀과 시간을 입력해주세요", isPresented: $showAlert) {
-        //                Button("OK", role: .cancel) {}
-        //            }
-        //        }
     }
     
     private var topTextField: some View {
@@ -135,15 +87,25 @@ struct AddSomethingView: View {
         VStack {
             HStack {
                 Spacer()
-                Image(systemName: "square.grid.2x2")
-                    .font(.title)
-                Image(systemName: "plus.circle")
-                    .font(.title)
+                Button { // 카테고리 버튼
+                    // action: Select category
+                } label: {
+                    Image(systemName: "square.grid.2x2")
+                        .font(.title)
+                }
+                Button { // 추가 버튼
+                    // action: Add CellInfoView
+                    cellInfo.append(CellInfo(smallTitle: "", content: ""))
+                } label: {
+                    Image(systemName: "plus.circle")
+                        .font(.title)
+                }
             }
             .padding([.leading, .trailing, .top])
             // 펼쳐지거나 닫히는 container
-            // 기본 container를 하나 가집니다.
-            RecipeCellView(stepTitle: $stepTitle, stepDescription: $stepDescription)
+            ForEach(cellInfo.indices, id: \.self) { index in
+                RecipeCellView(cellInfo: $cellInfo[index])
+            }
         }
         .background(.white)
         .clipShape(.rect(cornerRadius: 12))
@@ -156,9 +118,9 @@ struct AddSomethingView: View {
             if title.isEmpty {
                 showAlert = true
             } else {
-                let totalTime = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
-                let somthing = SomethingItem(title: title, timeRemaining: totalTime, isFavorite: isFavorite, categories: [])
-                modelContext.insert(somthing)
+//                let totalTime = selectedHours * 3600 + selectedMinutes * 60 + selectedSeconds
+                let something = SomethingItem(title: title, cellInfo: cellInfo, isFavorite: isFavorite, categories: [])
+                modelContext.insert(something)
                 dismiss()
             }
         }
