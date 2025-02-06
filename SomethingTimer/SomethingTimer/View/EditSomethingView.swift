@@ -20,6 +20,8 @@ struct EditSomethingView: View {
     @State private var title: String
     @State private var cellInfo: [CellInfo]
     @State private var isFavorite: Bool
+    @State private var categories: Categorys
+
     
     @State private var showImagePicker: Bool = false
     @State private var selectedImage: UIImage?
@@ -32,6 +34,7 @@ struct EditSomethingView: View {
         self._title = State(initialValue: something.title)
         self._isFavorite = State(initialValue: something.isFavorite)
         self._cellInfo = State(initialValue: something.cellInfo)
+        self._categories = State(initialValue: something.categories)
     }
     
     var body: some View {
@@ -57,7 +60,7 @@ struct EditSomethingView: View {
             .padding(.horizontal)
             .background(.green.opacity(0.5))
             .sheet(isPresented: $isShowCategory) {
-                ShowCategoryView(something: something)
+                ShowCategoryView(categories: $categories)
             }
         }
         .alert("타이틀과 시간을 입력해주세요", isPresented: $showAlert) {
@@ -128,13 +131,12 @@ struct EditSomethingView: View {
             HStack {
                 Spacer()
                 Button { // 카테고리 버튼
-                    // action: Select category
+                    isShowCategory = true
                 } label: {
                     Image(systemName: "square.grid.2x2")
                         .font(.title)
                 }
                 Button { // 추가 버튼
-                    // action: Add CellInfoView
                     cellInfo.append(CellInfo(smallTitle: "", content: ""))
                 } label: {
                     Image(systemName: "plus.circle")
@@ -175,11 +177,6 @@ struct EditSomethingView: View {
         .background(.white)
         .foregroundStyle(.green)
         .clipShape(.rect(cornerRadius: 12))
-    }
-    
-    /// ** Category 목록 보여주는 부분 **
-    private func showCategoryBottomSheet() {
-        isShowCategory = true // true -> 카테고리 시트 열림
     }
 }
 
