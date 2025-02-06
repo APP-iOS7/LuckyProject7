@@ -20,14 +20,18 @@ struct SomethingDetailView: View {
     var item: SomethingItem
     var timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     
+    private var totalTime: Int {
+        item.cellInfo.compactMap { $0.timeRemaining }.reduce(0, +)
+    }
+    
     private var progress: CGFloat {
         guard timeRemaining > 0 else { return 0 }
-        return CGFloat(timeRemaining) / CGFloat(item.timeRemaining)
+        return CGFloat(timeRemaining) / CGFloat(totalTime)
     }
     
     init(item: SomethingItem) {
         self.item = item
-        _timeRemaining = State(initialValue: item.timeRemaining)  // 초기화 추가
+        _timeRemaining = State(initialValue: item.cellInfo.compactMap { $0.timeRemaining }.reduce(0, +))
     }
     
     var body: some View {
@@ -57,10 +61,6 @@ struct SomethingDetailView: View {
             HStack {
                 // 재생 / 일시 정지 버튼
                 Button(action: {
-                    if !isRunning {
-                        // 타이머를 시작하기 전에 시간 설정을 반영
-                        timeRemaining = item.timeRemaining
-                    }
                     isRunning.toggle()
                 }, label: {
                     Image(systemName: isRunning ? "pause.fill" : "play.fill")
@@ -73,7 +73,7 @@ struct SomethingDetailView: View {
                 // 리셋 버튼
                 Button(action: {
                     isRunning = false
-                    timeRemaining = item.timeRemaining // 초기화시 아이템의 timeRemaining 값 사용
+                    timeRemaining = totalTime
                 }, label: {
                     Image(systemName: "arrow.clockwise")
                         .resizable()
@@ -124,5 +124,5 @@ struct SomethingDetailView: View {
 }
 
 #Preview {
-    SomethingDetailView(item: SomethingItem(title: "Hello, World!!", timeRemaining: 3600, isFavorite: false, categories: []))
+    SomethingDetailView(item: SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "Step 1", content: "설명", timeRemaining: 60)], isFavorite: false, categories: []))
 }

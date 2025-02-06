@@ -65,5 +65,5 @@ struct MainDetailBox: View {
 }
 
 #Preview {
-    MainDetailBox(item: SomethingItem(title: "Hello, World!!", timeRemaining: 3600, isFavorite: true, categories: []))
+    MainDetailBox(item: SomethingItem(title: "Hello, World!!", cellInfo: [CellInfo(smallTitle: "Step 1", content: "설명", timeRemaining: 60)], isFavorite: true, categories: []))
 }

@@ -11,19 +11,32 @@ import SwiftData
 
 
 
+
 @Model
 final class SomethingItem {
     var id: String = UUID().uuidString
     var title: String
-    var timeRemaining: Int
+    @Relationship(deleteRule: .cascade) var cellInfo: [CellInfo] // 관계형 데이터
     var isFavorite: Bool
     var categories: [Categorys]
     
-    init(title: String, timeRemaining: Int, isFavorite: Bool, categories: [Categorys]) {
+    init(title: String, cellInfo: [CellInfo], isFavorite: Bool, categories: [Categorys]) {
         self.title = title
-        self.timeRemaining = timeRemaining
+        self.cellInfo = cellInfo
         self.isFavorite = isFavorite
         self.categories = categories
     }
 }
 
+@Model
+final class CellInfo {
+    var smallTitle: String
+    var content: String
+    var timeRemaining: Int?
+
+    init(smallTitle: String, content: String, timeRemaining: Int? = nil) {
+        self.smallTitle = smallTitle
+        self.content = content
+        self.timeRemaining = timeRemaining
+    }
+}
