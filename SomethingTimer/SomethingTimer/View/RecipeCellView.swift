@@ -21,27 +21,29 @@ struct RecipeCellView: View {
     var body: some View {
         VStack {
             DisclosureGroup(isExpanded: $isExpanded) {
-                ScrollView {
-                    VStack(alignment: .leading) {
-                        TextField("Enter steps", text: $stepDescription)
-                            .frame(width: 300, height: 150, alignment: .topLeading)
+                VStack(alignment: .leading) {
+                    GeometryReader { geo in
+                        TextField("Enter steps", text: $stepDescription, axis: .vertical)
+                            .frame(width: geo.size.width, height: geo.size.height, alignment: .topLeading)
                             .padding()
-                        //.border(.black)
-                        Button {
-                            hasTimer.toggle()
-                        } label: {
-                            Image(systemName: "timer")
-                                .resizable()
-                                .frame(width: 32, height: 32)
-                                .foregroundStyle(hasTimer ? .blue : .gray)
-                            
-                        }
-                        .padding(5)
+                            .foregroundStyle(bgColor)
+                    }
+                    //.border(.black)
+                    Button {
+                        hasTimer.toggle()
+                    } label: {
+                        Image(systemName: "timer")
+                            .resizable()
+                            .frame(width: 32, height: 32)
+                            .foregroundStyle(hasTimer ? .blue : .gray)
                         
                     }
-                    .padding()
-                    .padding(.vertical, 10)
+                    .padding(5)
+                    
                 }
+                .frame(minHeight: 150)
+                .padding(.vertical, 10)
+            
             } label: {
                 HStack {
                     TextField("조리 단계를 입력하세요", text: $stepTitle)
