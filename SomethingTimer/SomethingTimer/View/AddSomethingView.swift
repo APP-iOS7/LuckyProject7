@@ -13,7 +13,7 @@ struct AddSomethingView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
-    @Query private var categorysRecipes: [RecipesByCategory] = [] /*[RecipesByCategory(selectedCategory: .KoreanFood, somethingItems: []), RecipesByCategory(selectedCategory: .ChineseFood, somethingItems: []), RecipesByCategory(selectedCategory: .JapaneseFood, somethingItems: []), RecipesByCategory(selectedCategory: .WesternFood, somethingItems: []), RecipesByCategory(selectedCategory: .SoutheastFood, somethingItems: []), RecipesByCategory(selectedCategory: .EtcFood, somethingItems: [])]*/
+    @Query private var categorysRecipes: [RecipesByCategory] = [] 
     
     let mainCategory: CategoryMainFood
     
@@ -64,11 +64,11 @@ struct AddSomethingView: View {
         .alert("타이틀을 입력해주세요", isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
         }
-//        .onAppear {
-//            if cellInfo.isEmpty {
-//                cellInfo.append(CellInfo(smallTitle: "", content: ""))
-//            }
-//        }
+        .onAppear {
+            if cellInfo.isEmpty {
+                cellInfo.append(CellInfo(smallTitle: "", content: ""))
+            }
+        }
     }
     
     private var starView: some View {
@@ -193,14 +193,7 @@ struct AddSomethingView: View {
                 
                 // 새로 만든 SomethingItem을 modelContext에 삽입
                 modelContext.insert(something)
-                
-                // context 저장 후 뷰 dismiss
-                do {
-                    try modelContext.save()
-                    dismiss()
-                } catch {
-                    print("저장 실패: \(error.localizedDescription)")
-                }
+                dismiss()
             }
         }
         .frame(maxWidth: .infinity, minHeight: 50)
