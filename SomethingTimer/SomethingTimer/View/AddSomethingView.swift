@@ -6,11 +6,16 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddSomethingView: View {
     
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
+    
+    @Query private var categorysRecipes: [RecipesByCategory]
+    
+    let mainCategory: CategoryMainFood
     
     @State private var title: String = ""
     @State private var isFavorite: Bool = false
@@ -23,10 +28,7 @@ struct AddSomethingView: View {
     
     @State private var categories: Categorys = Categorys(categoryCookMethod: nil, categoryIngredient: nil, categoryFoodGoal: nil, categoryUsingTool: nil)
     
-    // 기본 container를 하나 가집니다.
-    @State private var cellInfo: [CellInfo] = [
-        CellInfo(smallTitle: "", content: "", timeRemaining: nil)
-    ]
+    @State private var cellInfo: [CellInfo] = []
     
     @State private var stepTitle: String = ""
     @State private var stepDescription: String = ""
@@ -61,6 +63,11 @@ struct AddSomethingView: View {
         }
         .alert("타이틀을 입력해주세요", isPresented: $showAlert) {
             Button("OK", role: .cancel) {}
+        }
+        .onAppear {
+            if cellInfo.isEmpty {
+                cellInfo.append(CellInfo(smallTitle: "", content: ""))
+            }
         }
     }
     
@@ -103,14 +110,14 @@ struct AddSomethingView: View {
                     .frame(height: 150)
                     .overlay {
                         selectedImage != nil ?
-                            Image(uiImage: selectedImage!)
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(.circle)
-                            : Image(systemName: "photo.artframe.circle")
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                                .clipShape(.circle)
+                        Image(uiImage: selectedImage!)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(.circle)
+                        : Image(systemName: "photo.artframe.circle")
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .clipShape(.circle)
                     }
             }
             .onTapGesture {
@@ -132,6 +139,7 @@ struct AddSomethingView: View {
                 } label: {
                     Image(systemName: "square.grid.2x2")
                         .font(.title)
+                        .padding(.bottom)
                 }
                 Button { // 추가 버튼
                     // action: Add CellInfoView
@@ -139,6 +147,7 @@ struct AddSomethingView: View {
                 } label: {
                     Image(systemName: "plus.circle")
                         .font(.title)
+                        .padding(.bottom)
                 }
             }
             .padding([.leading, .trailing, .top])
@@ -155,15 +164,34 @@ struct AddSomethingView: View {
     private var saveButton: some View {
         Button("저장") {
             
-            guard let image = selectedImage else {
-                return //살짝 유효성 검사
-            }
-            
             // 타이틀 미 입력 시 알람을 띠우도록 조정
             if title.isEmpty {
                 showAlert = true
             } else {
-                let something = SomethingItem(title: title, cellInfo: cellInfo, isFavorite: isFavorite, categories: categories ,selectedImage: ConvertImageData.shared.convertImageData(uiImage: image))
+                // 새로운 SomethingItem 생성
+                let something = SomethingItem(
+                    title: title,
+                    cellInfo: cellInfo,
+                    isFavorite: isFavorite,
+                    categories: categories,
+                    selectedImage: selectedImage?.jpegData(compressionQuality: 1.0) ?? Data()
+                )
+                
+                // 해당 카테고리에 맞는 RecipesByCategory 검색
+                guard let categoryItem = categorysRecipes.first(where: { $0.selectedCategory == mainCategory }) else {
+                    print("카테고리를 찾을 수 없습니다.")
+                    return
+                }
+                
+                // 새롭게 만든 SomethingItem을 해당 카테고리의 somethingItems 배열에 추가
+                categoryItem.somethingItems.append(something)
+                
+                // 모든 CellInfo 객체들을 modelContext에 삽입
+                for cell in cellInfo {
+                    modelContext.insert(cell)
+                }
+                
+                // 새로 만든 SomethingItem을 modelContext에 삽입
                 modelContext.insert(something)
                 dismiss()
             }
@@ -205,5 +233,5 @@ struct AddSomethingView: View {
 }
 
 #Preview {
-    AddSomethingView()
+    AddSomethingView(mainCategory: .ChineseFood)
 }

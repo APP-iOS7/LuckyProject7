@@ -12,7 +12,7 @@ import SwiftData
 struct SomethingTimerApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            SomethingItem.self,
+            RecipesByCategory.self, SomethingItem.self, CellInfo.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false, cloudKitDatabase: .automatic)
 
@@ -26,7 +26,7 @@ struct SomethingTimerApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .modelContainer(sharedModelContainer)
         }
-        .modelContainer(sharedModelContainer)
     }
 }
