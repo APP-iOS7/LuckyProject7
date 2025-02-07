@@ -85,7 +85,7 @@ struct SomethingListView: View {
                 print("recipes : ", categorysRecipes)
             }
             .sheet(isPresented: $showingAddView) {
-                AddSomethingView()
+                AddSomethingView(mainCategory: selectedCategory)
             }
         }
     }
