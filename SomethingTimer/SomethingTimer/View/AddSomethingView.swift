@@ -13,7 +13,7 @@ struct AddSomethingView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     
-    @Query private var categorysRecipes: [RecipesByCategory] = [] 
+    @Query private var categorysRecipes: [RecipesByCategory]
     
     let mainCategory: CategoryMainFood
     
