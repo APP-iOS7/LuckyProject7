@@ -30,10 +30,13 @@ struct AddSomethingView: View {
     
     @State private var cellInfo: [CellInfo] = []
     
-    @State private var stepTitle: String = ""
-    @State private var stepDescription: String = ""
-    
     let bgColor: Color = .indigo
+    
+    init(mainCategory: CategoryMainFood) {
+        self.mainCategory = mainCategory
+        let predicate = #Predicate<RecipesByCategory> { $0.selectedCategory == mainCategory }
+        _ = Query(filter: predicate, sort: \RecipesByCategory.id, order: .forward)
+    }
     
     var body: some View {
         NavigationStack {
@@ -163,7 +166,12 @@ struct AddSomethingView: View {
     
     private var saveButton: some View {
         Button("저장") {
-            
+            guard selectedImage != nil else {
+                // nil이라면
+                print("어허어허 selectedImage가 nil이에요")
+                showAlert = true
+                return
+            }
             // 타이틀 미 입력 시 알람을 띠우도록 조정
             if title.isEmpty {
                 showAlert = true
@@ -174,25 +182,18 @@ struct AddSomethingView: View {
                     cellInfo: cellInfo,
                     isFavorite: isFavorite,
                     categories: categories,
-                    selectedImage: selectedImage?.jpegData(compressionQuality: 1.0) ?? Data()
+                    selectedImage: ConvertImageData.shared.convertImageData(uiImage: selectedImage ?? UIImage()) ?? Data()
                 )
                 
-                // 해당 카테고리에 맞는 RecipesByCategory 검색
-                guard let categoryItem = categorysRecipes.first(where: { $0.selectedCategory == mainCategory }) else {
-                    print("카테고리를 찾을 수 없습니다.")
+                // 해당 카테고리에 맞는 RecipesByCategory ex) [RecipesByCategory] 형태로 첫번째
+                guard let categoryItem = categorysRecipes.first else { // 첫번째 index가 category에 맞는RecipesByCategory
+                    print("뚜두뚜뚱뚜둥뚜둥 슈슈슈슉 값이 없나봄 ㅋ")
                     return
                 }
                 
                 // 새롭게 만든 SomethingItem을 해당 카테고리의 somethingItems 배열에 추가
                 categoryItem.somethingItems.append(something)
-                
-                // 모든 CellInfo 객체들을 modelContext에 삽입
-                for cell in cellInfo {
-                    modelContext.insert(cell)
-                }
-                
-                // 새로 만든 SomethingItem을 modelContext에 삽입
-                modelContext.insert(something)
+                print("categoryItem : \(categoryItem.selectedCategory)")
                 dismiss()
             }
         }

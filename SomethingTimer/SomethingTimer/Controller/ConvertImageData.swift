@@ -16,13 +16,13 @@ struct ConvertImageData {
     
     
     /// ** uiImage를 Data로 변환시키는 함수입니다 **
-    func convertImageData(uiImage: UIImage?) -> Data {
+    func convertImageData(uiImage: UIImage?) -> Data? {
         guard let image = uiImage else { return Data() }
-        return image.jpegData(compressionQuality: 1.0)!
+        return image.jpegData(compressionQuality: 1.0)
     }
     
     /// ** Data 를 Uiimage로 변환하는 함수입니다 **
     func convertDataImage(data: Data) -> UIImage? {
-        return UIImage(data: data)!
+        return UIImage(data: data)
     }
 }
