@@ -34,8 +34,8 @@ struct AddSomethingView: View {
     
     init(mainCategory: CategoryMainFood) {
         self.mainCategory = mainCategory
-        let predicate = #Predicate<RecipesByCategory> { $0.selectedCategory == mainCategory }
-        _ = Query(filter: predicate, sort: \RecipesByCategory.id, order: .forward)
+//        let predicate = #Predicate<RecipesByCategory> { $0.selectedCategory == mainCategory }
+//        _ = Query(filter: predicate, sort: \RecipesByCategory.id, order: .forward)
     }
     
     var body: some View {
@@ -186,10 +186,11 @@ struct AddSomethingView: View {
                 )
                 
                 // 해당 카테고리에 맞는 RecipesByCategory ex) [RecipesByCategory] 형태로 첫번째
-                guard let categoryItem = categorysRecipes.first else { // 첫번째 index가 category에 맞는RecipesByCategory
+                guard let categoryItem = categorysRecipes.filter({ $0.selectedCategory == mainCategory }).first else {
                     print("뚜두뚜뚱뚜둥뚜둥 슈슈슈슉 값이 없나봄 ㅋ")
                     return
                 }
+                print("mainCategory = \(mainCategory)")
                 
                 // 새롭게 만든 SomethingItem을 해당 카테고리의 somethingItems 배열에 추가
                 categoryItem.somethingItems.append(something)

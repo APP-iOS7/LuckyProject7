@@ -148,7 +148,7 @@ struct EditSomethingView: View {
             .padding([.leading, .trailing, .top])
             // 펼쳐지거나 닫히는 container
             ForEach(cellInfo.indices, id: \.self) { index in
-//                RecipeCellView(cellInfo: $cellInfo[index])
+                RecipeCellView(cellInfo: $cellInfo[index])
             }
         }
         .background(.white)
@@ -164,6 +164,7 @@ struct EditSomethingView: View {
                 something.title = title
                 something.isFavorite = isFavorite
                 something.cellInfo = cellInfo
+                something.categories = categories
                 // 오류 처리 추가
                 do {
                     try modelContext.save() // 오류가 발생할 수 있어 'try' 사용
