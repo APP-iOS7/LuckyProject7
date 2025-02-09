@@ -8,27 +8,22 @@
 import SwiftUI
 import SwiftData
 
-struct CategoryMainFoodList {
-    static let foodCategorys: [RecipesByCategory] = [
-        RecipesByCategory(selectedCategory: .KoreanFood, somethingItems: []),
-        RecipesByCategory(selectedCategory: .ChineseFood, somethingItems: []),
-        RecipesByCategory(selectedCategory: .JapaneseFood, somethingItems: []),
-        RecipesByCategory(selectedCategory: .WesternFood, somethingItems: []),
-        RecipesByCategory(selectedCategory: .SoutheastFood, somethingItems: []),
-        RecipesByCategory(selectedCategory: .EtcFood, somethingItems: []),
-    ]
-}
 
 struct GridView: View {
     @Environment(\.modelContext) private var modelContext
-
+    @Query private var categoryMainFoods: [RecipesByCategory]
+    
     private let columns = [GridItem(.flexible()), GridItem(.flexible())]
 
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
-                ForEach(CategoryMainFoodList.foodCategorys, id: \.self) { category in
-                    NavigationLink(destination: SomethingListView(selectedCategory: category.selectedCategory)) {
+                ForEach(categoryMainFoods, id: \.id) { category in
+                    NavigationLink(
+                        destination:
+                            SomethingListView(selectedCategory:category.selectedCategory
+                        )
+                    ) {
                         SomethingGridView(category: category.selectedCategory)
                     }
                 }

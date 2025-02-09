@@ -43,14 +43,18 @@ struct MainDetailBox: View {
     
     /// ** 오른쪽 이미지를 위한 View **
     private var rightImage: some View {
-        Circle()
-            .frame(maxWidth: 60, maxHeight: 60)
-            .foregroundStyle(.white)
-            .overlay {
-                Image(systemName: "fork.knife.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-            }
+        VStack{
+            item.selectedImage != nil ?
+            Image(uiImage: ConvertImageData.shared.convertDataImage(data: item.selectedImage) ?? UIImage())
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+            :
+            Image(systemName: "01.circle")
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+        }
+        .clipShape(.circle)
+        .frame(width: 60, height: 60)
     }
     
     /// **즐겨찾기 위치 조정 및 별 아이콘 **

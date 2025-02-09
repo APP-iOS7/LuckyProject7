@@ -148,7 +148,7 @@ struct EditSomethingView: View {
             .padding([.leading, .trailing, .top])
             // 펼쳐지거나 닫히는 container
             ForEach(cellInfo.indices, id: \.self) { index in
-                RecipeCellView(cellInfo: $cellInfo[index])
+//                RecipeCellView(cellInfo: $cellInfo[index])
             }
         }
         .background(.white)

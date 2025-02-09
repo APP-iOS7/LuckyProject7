@@ -49,8 +49,3 @@ struct AnimatedTitleView: View {
         .modelContainer(PreviewContainer.shared.container)
 }
 
-
-
-
-// 타이머 데이터 받는 법
-// 타이머 서클 원으로 하는 법

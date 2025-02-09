@@ -6,9 +6,11 @@
 //
 
 import SwiftData
+import Foundation
 
 @Model
 final class RecipesByCategory {
+    @Attribute(.unique) var id: UUID = UUID()
     var selectedCategory: CategoryMainFood
     
     //SwiftData에서 배열속성 관리 시 @Relationship 필요
